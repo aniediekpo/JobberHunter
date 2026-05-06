@@ -1,0 +1,3762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a1420" />
+<title>RAM·TRACK — Engineering Jobs Across the US</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #050a14;
+    --bg: #0a1420;
+    --surface: #0f1a2a;
+    --surface-2: #142235;
+    --border: #1e2f48;
+    --border-soft: #16243a;
+    --accent: #f5a623;
+    --accent-dim: #b87a17;
+    --accent-glow: rgba(245, 166, 35, 0.15);
+    --text: #e8e6e0;
+    --text-dim: #8a9bb0;
+    --text-faint: #4a5a72;
+    --status-saved: #5a7da8;
+    --status-applied: #4a90e2;
+    --status-interview: #f5a623;
+    --status-offer: #5cb85c;
+    --status-rejected: #8a4a4a;
+    --gc-green: #5cb85c;
+    --gc-yellow: #d4a85a;
+    --gc-red: #c25555;
+    --danger: #c25555;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg-deep);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      linear-gradient(180deg, transparent 0%, rgba(245,166,35,0.03) 100%),
+      radial-gradient(ellipse at top, rgba(245,166,35,0.06), transparent 50%),
+      var(--bg-deep);
+    background-attachment: fixed;
+    padding-bottom: 80px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,166,35,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,166,35,0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+
+  header {
+    padding: 20px 16px 12px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(8px);
+    background: rgba(10, 20, 32, 0.7);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--accent);
+    display: grid; place-items: center;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .brand-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+  }
+  .brand-text span { color: var(--accent); }
+  .stat-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    text-transform: uppercase;
+  }
+  .stat-pill b { color: var(--accent); font-weight: 600; }
+
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-soft);
+    background: var(--bg);
+    position: sticky;
+    top: 64px;
+    z-index: 9;
+  }
+  .tab {
+    flex: 1;
+    padding: 14px 8px;
+    background: none;
+    border: none;
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.18s ease;
+  }
+  .tab:hover { color: var(--text-dim); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: linear-gradient(180deg, transparent 0%, var(--accent-glow) 100%);
+  }
+
+  .panel { padding: 20px 16px; display: none; }
+  .panel.active { display: block; }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--border-soft);
+  }
+
+  .search-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .search-input-wrap { position: relative; }
+  input[type="text"], input[type="email"], input[type="password"], input[type="url"], textarea, select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    font-family: var(--sans);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  textarea { font-family: var(--mono); font-size: 13px; resize: vertical; min-height: 80px; }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+
+  .search-input-wrap input {
+    padding-right: 90px;
+    font-family: var(--mono);
+    font-size: 14px;
+  }
+  .search-btn {
+    position: absolute;
+    right: 4px; top: 4px; bottom: 4px;
+    padding: 0 14px;
+    background: var(--accent);
+    color: var(--bg-deep);
+    border: none;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .search-btn:hover { background: #ffb83a; }
+
+  .filter-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    background: var(--surface);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--text-dim); color: var(--text); }
+  .chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+  .chip.small { font-size: 10px; padding: 4px 8px; }
+
+  .seg-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 5px 9px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    background: var(--surface);
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .seg-btn:hover { color: var(--text); }
+  .seg-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  /* Filter accordion */
+  .filter-block {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    margin-bottom: 10px;
+  }
+  .filter-block summary {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+  }
+  .filter-block summary::-webkit-details-marker { display: none; }
+  .filter-block summary::after {
+    content: '+';
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 16px;
+    line-height: 1;
+  }
+  .filter-block[open] summary::after { content: '−'; }
+  .filter-block summary:hover { color: var(--text); }
+  .filter-block .badge-count {
+    background: var(--accent-glow);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 2px 7px;
+    font-size: 10px;
+    margin-left: auto;
+    margin-right: 8px;
+  }
+  .filter-block-body {
+    padding: 0 12px 14px;
+    border-top: 1px dashed var(--border-soft);
+    margin-top: 0;
+    padding-top: 12px;
+  }
+
+  .checkbox-row {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .checkbox-row label {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: 16px; height: 16px; accent-color: var(--accent);
+  }
+
+  .filter-info {
+    background: var(--surface);
+    border-left: 2px solid var(--accent);
+    padding: 12px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .job-list { display: flex; flex-direction: column; gap: 10px; }
+  .job-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    padding: 14px 14px 12px;
+    transition: border-color 0.15s;
+    border-left-width: 3px;
+  }
+  .job-card.gc-friendly { border-left-color: var(--gc-green); }
+  .job-card.unknown { border-left-color: var(--gc-yellow); }
+  .job-card.citizens-only { border-left-color: var(--gc-red); }
+  .job-card:hover { border-color: var(--border); }
+  .job-card-header {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+    margin-bottom: 6px;
+  }
+  .job-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    flex: 1;
+  }
+  .job-source {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    flex-shrink: 0;
+  }
+  .job-meta {
+    display: flex; flex-wrap: wrap; gap: 6px 14px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    margin-bottom: 10px;
+  }
+  .job-meta span { display: inline-flex; align-items: center; gap: 4px; }
+  .job-meta .label { color: var(--text-faint); }
+  .pay-tag {
+    color: var(--gc-green);
+    font-weight: 500;
+  }
+  .job-actions {
+    display: flex; gap: 8px; align-items: center;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-soft);
+  }
+  .btn {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg-deep);
+    border-color: var(--accent);
+  }
+  .btn.primary:hover { background: #ffb83a; color: var(--bg-deep); }
+  .btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+  .status-badge, .gc-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .status-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+  }
+  .status-saved { color: var(--status-saved); border-color: var(--status-saved); }
+  .status-applied { color: var(--status-applied); border-color: var(--status-applied); }
+  .status-interview { color: var(--status-interview); border-color: var(--status-interview); }
+  .status-offer { color: var(--status-offer); border-color: var(--status-offer); }
+  .status-rejected { color: var(--status-rejected); border-color: var(--status-rejected); }
+
+  .gc-gc-friendly { color: var(--gc-green); border-color: var(--gc-green); background: rgba(92,184,92,0.08); }
+  .gc-unknown    { color: var(--gc-yellow); border-color: #6b5a3a; background: rgba(212,168,90,0.08); }
+  .gc-citizens-only { color: var(--gc-red); border-color: var(--gc-red); background: rgba(194,85,85,0.08); }
+
+  .new-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    padding: 2px 6px;
+    background: var(--accent);
+    color: var(--bg-deep);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .follow-up-flag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border: 1px solid var(--gc-yellow);
+    color: var(--gc-yellow);
+    background: rgba(212,168,90,0.12);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .watch-star {
+    background: none;
+    border: none;
+    color: var(--text-faint);
+    cursor: pointer;
+    padding: 2px 6px;
+    font-size: 16px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .watch-star:hover { color: var(--accent); }
+  .watch-star.active { color: var(--accent); }
+
+  .company-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .company-card .name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .company-card .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-top: 3px;
+    letter-spacing: 0.05em;
+  }
+  .company-card .indicator {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .ind-api { background: var(--gc-green); }
+  .ind-manual { background: var(--gc-yellow); }
+
+  /* Match score */
+  .match-score {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border: 1px solid;
+    text-transform: uppercase;
+  }
+  .match-high { color: var(--gc-green); border-color: var(--gc-green); background: rgba(92,184,92,0.08); }
+  .match-mid  { color: var(--gc-yellow); border-color: #6b5a3a; background: rgba(212,168,90,0.08); }
+  .match-low  { color: var(--text-faint); border-color: var(--border); }
+
+  .match-detail {
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border-left: 2px solid var(--border);
+    font-size: 12px;
+  }
+  .match-detail .kw {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    margin: 2px 3px 2px 0;
+    border: 1px solid var(--border);
+  }
+  .kw.matched { color: var(--gc-green); border-color: var(--gc-green); background: rgba(92,184,92,0.1); }
+  .kw.missing { color: var(--gc-yellow); border-color: #6b5a3a; background: rgba(212,168,90,0.1); }
+  .match-detail-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    margin: 4px 0 2px;
+  }
+
+  /* Application checklist */
+  .checklist {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border-soft);
+  }
+  .checklist-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .checklist-progress {
+    flex: 1;
+    height: 2px;
+    background: var(--border-soft);
+    position: relative;
+    overflow: hidden;
+  }
+  .checklist-progress-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--accent);
+    transition: width 0.2s;
+  }
+  .checklist-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+  .checklist-row input[type="checkbox"] {
+    width: 14px; height: 14px;
+    accent-color: var(--accent);
+  }
+  .checklist-row.checked { color: var(--text-faint); text-decoration: line-through; }
+
+  /* Gap rollup */
+  .gap-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-bottom: 1px dashed var(--border-soft);
+    font-size: 13px;
+  }
+  .gap-item:last-child { border-bottom: none; }
+  .gap-keyword {
+    font-family: var(--mono);
+    color: var(--gc-yellow);
+    font-size: 12px;
+  }
+  .gap-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .gap-bar {
+    height: 4px;
+    background: var(--border-soft);
+    flex: 1;
+    margin: 0 12px;
+    position: relative;
+    max-width: 120px;
+  }
+  .gap-bar-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--gc-yellow);
+  }
+
+  /* Resume version cards */
+  .resume-version-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .resume-version-card:hover { border-color: var(--border); }
+  .resume-version-card.active {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+  }
+  .resume-version-card input[type="radio"] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+  .resume-version-card .name {
+    flex: 1;
+    font-weight: 500;
+  }
+  .resume-version-card .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .resume-version-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-left: 6px;
+  }
+
+  /* AI tailoring */
+  .ai-btn {
+    background: linear-gradient(90deg, var(--accent) 0%, #ffb83a 100%);
+    color: var(--bg-deep);
+    border: none;
+    padding: 6px 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .ai-btn:hover { filter: brightness(1.1); }
+  .ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .ai-suggestion {
+    margin-top: 10px;
+    padding: 12px;
+    background: var(--bg);
+    border-left: 2px solid var(--accent);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .ai-suggestion-header {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ai-suggestion-meta {
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .ai-loading {
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 12px;
+  }
+  .ai-loading::after {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 4px;
+    background: var(--accent);
+    margin-left: 4px;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    border: 1px dashed var(--border-soft);
+  }
+  .empty .icon { font-size: 32px; opacity: 0.4; margin-bottom: 12px; display: block; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .form-group .hint {
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .form-group .hint a, .form-group .hint b { color: var(--accent); text-decoration: none; }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px 16px 30px;
+    animation: slideUp 0.25s ease-out;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal h3 {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+  .modal-actions .btn { flex: 1; justify-content: center; padding: 10px; }
+
+  .status-section { margin-bottom: 22px; }
+
+  .fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 52px; height: 52px;
+    background: var(--accent);
+    color: var(--bg-deep);
+    border: none;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 50;
+    box-shadow: 0 4px 20px rgba(245,166,35,0.3);
+    display: grid; place-items: center;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface-2);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 10px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .toast.show { opacity: 1; }
+
+  .progress-bar {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+  .progress-bar .bar-track {
+    height: 2px;
+    background: var(--border-soft);
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .progress-bar .bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.2s;
+  }
+
+  .notes-display {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border-left: 2px solid var(--border);
+    font-style: italic;
+    white-space: pre-wrap;
+  }
+
+  .settings-section {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .settings-section h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .export-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+
+  .badge-row {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .selected-summary {
+    padding: 8px 10px;
+    background: var(--bg);
+    border-left: 2px solid var(--accent);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 480px) {
+    body { font-size: 14px; }
+    header { padding: 14px 14px 10px; }
+    .brand-text { font-size: 11px; }
+    .panel { padding: 16px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">R</div>
+      <div class="brand-text">RAM<span>·</span>TRACK</div>
+    </div>
+    <div class="stat-pill"><b id="trackedCount">0</b> Tracked</div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="discover">Discover</button>
+    <button class="tab" data-tab="tracking">Tracking</button>
+    <button class="tab" data-tab="companies">Companies</button>
+    <button class="tab" data-tab="resume">Resume</button>
+    <button class="tab" data-tab="settings">Settings</button>
+  </nav>
+
+  <!-- DISCOVER -->
+  <section class="panel active" id="panel-discover">
+    <div id="envBanner"></div>
+    <div class="section-label">Search · Greenhouse + Lever</div>
+
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <input type="text" id="searchInput" placeholder="reliability engineer" />
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+      <div class="filter-row" id="presetChips">
+        <button class="chip" data-preset="reliability engineer">Reliability Eng</button>
+        <button class="chip" data-preset="reliability">Reliability (broad)</button>
+        <button class="chip" data-preset="hardware engineer">Hardware Eng</button>
+        <button class="chip" data-preset="systems engineer">Systems Eng</button>
+        <button class="chip" data-preset="quality engineer">Quality Eng</button>
+        <button class="chip" data-preset="failure analysis">Failure Analysis</button>
+      </div>
+      <details class="filter-block" style="margin-top:8px;">
+        <summary>
+          <span>More Title Presets — Reliability-Adjacent</span>
+        </summary>
+        <div class="filter-block-body">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:6px;">Reliability-focused</div>
+          <div class="filter-row" style="margin-bottom:10px;">
+            <button class="chip small" data-preset="pipeline integrity">Pipeline Integrity</button>
+            <button class="chip small" data-preset="asset integrity">Asset Integrity</button>
+            <button class="chip small" data-preset="process safety">Process Safety</button>
+            <button class="chip small" data-preset="corrosion engineer">Corrosion</button>
+            <button class="chip small" data-preset="maintenance engineer">Maintenance Eng</button>
+            <button class="chip small" data-preset="reliability centered maintenance">RCM</button>
+            <button class="chip small" data-preset="asset management">Asset Management</button>
+            <button class="chip small" data-preset="risk engineer">Risk Eng</button>
+            <button class="chip small" data-preset="condition monitoring">Condition Monitoring</button>
+            <button class="chip small" data-preset="FMEA">FMEA</button>
+            <button class="chip small" data-preset="HAZOP">HAZOP</button>
+          </div>
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:6px;">Petroleum / Energy</div>
+          <div class="filter-row" style="margin-bottom:10px;">
+            <button class="chip small" data-preset="pipeline engineer">Pipeline Eng</button>
+            <button class="chip small" data-preset="petroleum engineer">Petroleum Eng</button>
+            <button class="chip small" data-preset="energy analyst">Energy Analyst</button>
+            <button class="chip small" data-preset="fluid systems">Fluid Systems</button>
+            <button class="chip small" data-preset="thermal engineer">Thermal Eng</button>
+          </div>
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.15em;color:var(--text-faint);text-transform:uppercase;margin-bottom:6px;">Part-time / Academic</div>
+          <div class="filter-row">
+            <button class="chip small" data-preset="adjunct">Adjunct</button>
+            <button class="chip small" data-preset="lecturer engineering">Lecturer</button>
+            <button class="chip small" data-preset="part-time engineer">Part-time Eng</button>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Citizenship view mode -->
+    <div class="filter-info">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+        <strong style="margin-right:4px;">Citizenship:</strong>
+        <button class="seg-btn" data-mode="all">All</button>
+        <button class="seg-btn active" data-mode="open">Hide citizens-only</button>
+        <button class="seg-btn" data-mode="gc-only">GC-friendly only</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:8px;border-top:1px dashed var(--border-soft);">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-dim);">
+          <input type="checkbox" id="watchedFilterCheck" style="width:16px;height:16px;accent-color:var(--accent);" />
+          <span>Show only watched companies <span id="watchedFilterCount" style="color:var(--text-faint);font-family:var(--mono);font-size:11px;"></span></span>
+        </label>
+      </div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">
+        🟢 GC-friendly · 🟡 Unclear · 🔴 Citizens-only
+      </div>
+    </div>
+
+    <!-- States filter -->
+    <details class="filter-block" id="stateFilterBlock">
+      <summary>
+        <span>States</span>
+        <span class="badge-count" id="stateCount" style="display:none;">0</span>
+      </summary>
+      <div class="filter-block-body">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+          <button class="chip small" id="stateRemoteBtn" data-state="Remote">Remote</button>
+          <button class="chip small" id="stateClearBtn" style="border-color:var(--gc-red);color:var(--gc-red);">Clear All</button>
+        </div>
+        <div class="state-grid" id="stateGrid"></div>
+      </div>
+    </details>
+
+    <!-- Pay filter -->
+    <details class="filter-block" id="payFilterBlock">
+      <summary>
+        <span>Pay</span>
+        <span class="badge-count" id="payCount" style="display:none;">0</span>
+      </summary>
+      <div class="filter-block-body">
+        <div class="checkbox-row">
+          <label><input type="checkbox" data-pay-min="80000" /> $80k+ minimum</label>
+          <label><input type="checkbox" data-pay-min="100000" /> $100k+ minimum</label>
+          <label><input type="checkbox" data-pay-min="120000" /> $120k+ minimum</label>
+          <label><input type="checkbox" data-pay-min="150000" /> $150k+ minimum</label>
+          <label style="margin-top:6px;border-top:1px dashed var(--border-soft);padding-top:8px;">
+            <input type="checkbox" id="payIncludeUnspecified" checked />
+            Include jobs without pay listed
+          </label>
+        </div>
+      </div>
+    </details>
+
+    <!-- Employment type filter -->
+    <details class="filter-block" id="typeFilterBlock">
+      <summary>
+        <span>Employment Type</span>
+        <span class="badge-count" id="typeCount" style="display:none;">0</span>
+      </summary>
+      <div class="filter-block-body">
+        <div class="checkbox-row">
+          <label><input type="checkbox" data-emp-type="full-time" /> Full-time</label>
+          <label><input type="checkbox" data-emp-type="part-time" /> Part-time</label>
+          <label><input type="checkbox" data-emp-type="contract" /> Contract / temporary</label>
+          <label><input type="checkbox" data-emp-type="intern" /> Intern / co-op</label>
+          <label><input type="checkbox" data-emp-type="unknown" /> Unspecified</label>
+        </div>
+        <div class="hint" style="margin-top:8px;">Detection uses keywords; unspecified jobs are usually full-time but not labeled.</div>
+      </div>
+    </details>
+
+    <!-- Sort -->
+    <details class="filter-block" id="sortBlock">
+      <summary>
+        <span>Sort</span>
+        <span style="color:var(--accent);font-size:10px;text-transform:none;letter-spacing:0;font-family:var(--sans);" id="sortLabel">Default</span>
+      </summary>
+      <div class="filter-block-body">
+        <div class="checkbox-row">
+          <label><input type="radio" name="sortMode" value="default" checked /> Default (citizenship → pay → posted)</label>
+          <label><input type="radio" name="sortMode" value="proximity" /> Closest to my home state <span id="homeStateInline" style="color:var(--text-faint);font-size:11px;"></span></label>
+          <label><input type="radio" name="sortMode" value="pay-desc" /> Highest pay first</label>
+          <label><input type="radio" name="sortMode" value="recent" /> Most recently posted</label>
+        </div>
+        <div class="hint" id="proximityHint" style="margin-top:8px;display:none;color:var(--gc-yellow);">
+          Set your home state in Settings to enable proximity sort.
+        </div>
+      </div>
+    </details>
+
+    <div class="section-label" id="resultsLabel">Results</div>
+    <div id="searchProgress"></div>
+    <div id="searchResults" class="job-list"></div>
+  </section>
+
+  <!-- TRACKING -->
+  <section class="panel" id="panel-tracking">
+    <div class="section-label">Application Pipeline</div>
+    <div class="export-bar">
+      <button class="btn" id="exportJsonBtn">Export JSON</button>
+      <button class="btn" id="exportCsvBtn">Export CSV</button>
+    </div>
+    <div id="trackingList"></div>
+  </section>
+
+  <!-- COMPANIES -->
+  <section class="panel" id="panel-companies">
+    <div class="section-label">Watched Companies</div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+      <button class="btn primary" id="addWatchedBtn">+ Add Company</button>
+      <button class="btn" id="showAllWatchedBtn">Show All Jobs From Watched</button>
+    </div>
+
+    <div class="filter-info" style="margin-bottom:14px;">
+      <strong>How tracking works:</strong>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:6px;line-height:1.5;">
+        🟢 API-tracked — searchable in Discover, picks up new postings on refresh<br>
+        🟡 Manual-check — link to careers page, you check it yourself<br>
+        Tap "Show All Jobs From Watched" to dump every API-tracked company's listings.
+      </div>
+    </div>
+
+    <div id="companiesList"></div>
+  </section>
+
+  <!-- RESUME -->
+  <section class="panel" id="panel-resume">
+    <div class="section-label">Resume Slots</div>
+
+    <div class="filter-info" style="margin-bottom:14px;">
+      <strong>Two fixed slots:</strong>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:6px;line-height:1.5;">
+        Use <strong>Primary</strong> for your main resume (e.g. Reliability/Defense) and <strong>Alternate</strong> for a different version (e.g. Petroleum/Energy or Academic). Tap "Active" on whichever slot you want to use for match scoring and AI tailoring.
+        <br><br>
+        Upload <code style="color:var(--accent);">.txt</code>, <code style="color:var(--accent);">.docx</code>, or <code style="color:var(--accent);">.pdf</code> — extraction happens in your browser, files don't leave your device.
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h4 style="margin:0;">Primary</h4>
+        <label style="display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--text-dim);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;">
+          <input type="radio" name="activeSlot" value="primary" id="activeSlot-primary" style="width:16px;height:16px;accent-color:var(--accent);" />
+          Active
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Name (e.g. Reliability/Defense)</label>
+        <input type="text" id="slotName-primary" placeholder="Primary" />
+      </div>
+      <div class="form-group">
+        <label>Tag (optional)</label>
+        <input type="text" id="slotTag-primary" placeholder="defense" />
+      </div>
+      <div class="form-group">
+        <label>Upload Resume File</label>
+        <input type="file" id="slotFile-primary" accept=".txt,.docx,.pdf" style="display:none;" />
+        <button class="btn" id="slotUploadBtn-primary">⬆ Choose .txt / .docx / .pdf</button>
+        <span id="slotFileStatus-primary" style="margin-left:8px;font-size:11px;color:var(--text-faint);font-family:var(--mono);"></span>
+        <div class="hint">PDF extraction quality varies — review/edit the text below after upload.</div>
+      </div>
+      <div class="form-group">
+        <label>Resume Text (review or paste manually)</label>
+        <textarea id="slotText-primary" rows="10" placeholder="Paste resume here, or use Upload above"></textarea>
+      </div>
+      <button class="btn primary" id="slotSave-primary">Save Primary</button>
+      <button class="btn danger" id="slotClear-primary" style="margin-left:8px;">Clear Slot</button>
+    </div>
+
+    <div class="settings-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h4 style="margin:0;">Alternate</h4>
+        <label style="display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--text-dim);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;">
+          <input type="radio" name="activeSlot" value="alternate" id="activeSlot-alternate" style="width:16px;height:16px;accent-color:var(--accent);" />
+          Active
+        </label>
+      </div>
+      <div class="form-group">
+        <label>Name (e.g. Petroleum/Energy)</label>
+        <input type="text" id="slotName-alternate" placeholder="Alternate" />
+      </div>
+      <div class="form-group">
+        <label>Tag (optional)</label>
+        <input type="text" id="slotTag-alternate" placeholder="petroleum" />
+      </div>
+      <div class="form-group">
+        <label>Upload Resume File</label>
+        <input type="file" id="slotFile-alternate" accept=".txt,.docx,.pdf" style="display:none;" />
+        <button class="btn" id="slotUploadBtn-alternate">⬆ Choose .txt / .docx / .pdf</button>
+        <span id="slotFileStatus-alternate" style="margin-left:8px;font-size:11px;color:var(--text-faint);font-family:var(--mono);"></span>
+        <div class="hint">PDF extraction quality varies — review/edit the text below after upload.</div>
+      </div>
+      <div class="form-group">
+        <label>Resume Text (review or paste manually)</label>
+        <textarea id="slotText-alternate" rows="10" placeholder="Paste resume here, or use Upload above"></textarea>
+      </div>
+      <button class="btn primary" id="slotSave-alternate">Save Alternate</button>
+      <button class="btn danger" id="slotClear-alternate" style="margin-left:8px;">Clear Slot</button>
+    </div>
+
+    <div class="settings-section">
+      <h4>Skill Gap Rollup</h4>
+      <div id="gapRollup">
+        <div style="color:var(--text-faint);font-size:12px;">Save a resume and run a search — patterns will appear here.</div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4>AI Tailoring (Optional)</h4>
+      <div class="hint" style="margin-bottom:12px;line-height:1.5;">
+        Pick a provider to enable resume tailoring suggestions. <strong style="color:var(--accent);">Without a provider, everything else still works</strong> — match scores, gap rollup, all client-side analysis.
+      </div>
+
+      <div class="form-group">
+        <label>Active Provider</label>
+        <div class="filter-row" id="aiProviderRow">
+          <button type="button" class="chip" data-provider="none">None (off)</button>
+          <button type="button" class="chip" data-provider="gemini">Google Gemini</button>
+          <button type="button" class="chip" data-provider="anthropic">Anthropic Claude</button>
+        </div>
+        <div class="hint" id="providerHint" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="form-group" id="geminiKeyGroup" style="display:none;">
+        <label>Gemini API Key</label>
+        <input type="password" id="geminiApiKey" placeholder="AIza..." autocomplete="off" />
+        <div class="hint">
+          Free at <strong>aistudio.google.com/apikey</strong>. Free tier: 15 requests/min, 1500/day.
+          <br><br>
+          Stored locally on this device only — never sent anywhere except directly to Google's API.
+        </div>
+        <div style="margin-top:14px;">
+          <label style="font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);display:block;margin-bottom:6px;">Model</label>
+          <div class="filter-row" id="geminiModelRow">
+            <button type="button" class="chip small" data-gemini-model="gemini-2.5-flash-lite">2.5 Flash Lite (fastest, cheapest)</button>
+            <button type="button" class="chip small" data-gemini-model="gemini-2.5-flash">2.5 Flash (balanced)</button>
+            <button type="button" class="chip small" data-gemini-model="gemini-2.5-pro">2.5 Pro (best quality)</button>
+          </div>
+          <div class="hint" style="margin-top:6px;">Flash Lite handles resume tailoring well. Pro only if you want the highest-quality suggestions.</div>
+        </div>
+        <div style="margin-top:10px;">
+          <button class="btn primary" id="saveGeminiKeyBtn">Save Gemini Key</button>
+          <button class="btn" id="testGeminiKeyBtn" style="margin-left:8px;">Test Key</button>
+          <button class="btn danger" id="clearGeminiKeyBtn" style="margin-left:8px;">Remove</button>
+        </div>
+        <div id="geminiKeyStatus" style="margin-top:10px;font-family:var(--mono);font-size:11px;"></div>
+      </div>
+
+      <div class="form-group" id="anthropicKeyGroup" style="display:none;">
+        <label>Anthropic API Key</label>
+        <input type="password" id="anthropicApiKey" placeholder="sk-ant-..." autocomplete="off" />
+        <div class="hint">
+          Get one at <strong>console.anthropic.com</strong>. Pay-as-you-go, ~$0.005 per tailoring with Haiku 4.5.
+          <br><br>
+          Stored locally on this device only — never sent anywhere except directly to Anthropic's API.
+        </div>
+        <div style="margin-top:10px;">
+          <button class="btn primary" id="saveApiKeyBtn">Save Anthropic Key</button>
+          <button class="btn" id="testApiKeyBtn" style="margin-left:8px;">Test Key</button>
+          <button class="btn danger" id="clearApiKeyBtn" style="margin-left:8px;">Remove</button>
+        </div>
+        <div id="apiKeyStatus" style="margin-top:10px;font-family:var(--mono);font-size:11px;"></div>
+      </div>
+
+      <div id="apiUsageInfo" style="margin-top:8px;font-size:11px;color:var(--text-faint);"></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="panel" id="panel-settings">
+    <div class="section-label">Configuration</div>
+
+    <div class="settings-section">
+      <h4>Home State</h4>
+      <div class="form-group">
+        <label>For "closest to me" sorting</label>
+        <select id="homeStateSelect">
+          <option value="">— Not set —</option>
+        </select>
+        <div class="hint">When set, you can sort search results by approximate distance from this state.</div>
+      </div>
+      <button class="btn primary" id="saveHomeBtn">Save</button>
+    </div>
+
+    <div class="settings-section">
+      <h4>Greenhouse Companies</h4>
+      <div class="form-group">
+        <label>Board tokens (one per line)</label>
+        <textarea id="ghBoards" rows="9"></textarea>
+        <div class="hint">Find at <b>boards.greenhouse.io/{token}</b>. Tokens are case-sensitive. If a company shows 0 jobs, the token is wrong — check the URL on their careers page.</div>
+      </div>
+      <button class="btn primary" id="saveGhBtn">Save</button>
+    </div>
+
+    <div class="settings-section">
+      <h4>Lever Companies</h4>
+      <div class="form-group">
+        <label>Company slugs (one per line)</label>
+        <textarea id="leverBoards" rows="4"></textarea>
+        <div class="hint">Find at <b>jobs.lever.co/{slug}</b>.</div>
+      </div>
+      <button class="btn primary" id="saveLeverBtn">Save</button>
+    </div>
+
+    <div class="settings-section">
+      <h4>SRE / DevOps Exclusion Keywords</h4>
+      <div class="form-group">
+        <label>Comma-separated</label>
+        <textarea id="excludeKeywords" rows="3"></textarea>
+        <div class="hint">Job titles or descriptions containing any of these are hidden.</div>
+      </div>
+      <button class="btn primary" id="saveFilterBtn">Save</button>
+    </div>
+
+    <div class="settings-section">
+      <h4>Diagnostics</h4>
+      <div class="form-group">
+        <div class="hint" style="margin:0 0 10px 0;">
+          If search fails for everything, tap below to verify network access.
+        </div>
+        <button class="btn primary" id="testConnBtn">Test Connection</button>
+        <div id="testConnResult" style="margin-top:10px;font-family:var(--mono);font-size:11px;"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4>Data</h4>
+      <button class="btn" id="loadDmvPackBtn" style="margin-right:8px;margin-bottom:6px;">+ Load DMV Watchlist Pack</button>
+      <button class="btn" id="resetDefaultsBtn" style="margin-right:8px;margin-bottom:6px;">Reset Companies to Defaults</button>
+      <button class="btn danger" id="clearDataBtn">Clear All Tracked Jobs</button>
+      <div class="hint" style="margin-top:8px;">DMV Pack adds ~40 utilities, transit, federal, primes, consultancies, and DMV universities to your Watchlist (manual-check entries). Existing watched companies are preserved.</div>
+    </div>
+  </section>
+</div>
+
+<button class="fab" id="addManualBtn" title="Add job manually">+</button>
+
+<!-- Manual add modal -->
+<div class="modal-backdrop" id="manualModal">
+  <div class="modal">
+    <h3>Add Job Manually</h3>
+    <div class="form-group">
+      <label>Quick-pick Defense Primes (auto-fills company + sets citizens-only)</label>
+      <div class="filter-row" id="primeChips">
+        <button type="button" class="chip small" data-prime="Northrop Grumman">Northrop</button>
+        <button type="button" class="chip small" data-prime="Lockheed Martin">Lockheed</button>
+        <button type="button" class="chip small" data-prime="BAE Systems">BAE</button>
+        <button type="button" class="chip small" data-prime="Raytheon (RTX)">RTX</button>
+        <button type="button" class="chip small" data-prime="General Dynamics">GD</button>
+        <button type="button" class="chip small" data-prime="Leidos">Leidos</button>
+        <button type="button" class="chip small" data-prime="L3Harris">L3Harris</button>
+        <button type="button" class="chip small" data-prime="SAIC">SAIC</button>
+        <button type="button" class="chip small" data-prime="Boeing">Boeing</button>
+        <button type="button" class="chip small" data-prime="Booz Allen Hamilton">BAH</button>
+        <button type="button" class="chip small" data-prime="CACI">CACI</button>
+        <button type="button" class="chip small" data-prime="Peraton">Peraton</button>
+        <button type="button" class="chip small" data-prime="Johns Hopkins APL">JHU APL</button>
+        <button type="button" class="chip small" data-prime="MITRE">MITRE</button>
+        <button type="button" class="chip small" data-prime="Aerospace Corporation">Aerospace Corp</button>
+      </div>
+      <div class="hint" style="margin-top:6px;">These primes typically use Workday/proprietary ATSes that aren't searchable. Tap to pre-fill, then paste the URL from their careers site.</div>
+    </div>
+    <div class="form-group">
+      <label>Job Title</label>
+      <input type="text" id="m_title" placeholder="Reliability Engineer III" />
+    </div>
+    <div class="form-group">
+      <label>Company</label>
+      <input type="text" id="m_company" placeholder="Northrop Grumman" />
+    </div>
+    <div class="form-group">
+      <label>Location</label>
+      <input type="text" id="m_location" placeholder="Baltimore, MD" />
+    </div>
+    <div class="form-group">
+      <label>URL</label>
+      <input type="url" id="m_url" placeholder="https://..." />
+    </div>
+    <div class="form-group">
+      <label>Notes (paste pay range, deadline, contacts here)</label>
+      <textarea id="m_notes" placeholder="$120k–$160k, posting closes 6/15..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Initial Status</label>
+      <select id="m_status">
+        <option value="saved">Saved</option>
+        <option value="applied">Applied</option>
+        <option value="interview">Interview</option>
+        <option value="offer">Offer</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Citizenship Requirement</label>
+      <select id="m_citizenship">
+        <option value="unknown">Unclear / Not specified</option>
+        <option value="gc-friendly">GC-friendly (U.S. Person / no sponsorship)</option>
+        <option value="citizens-only">U.S. Citizens only</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="manualCancelBtn">Cancel</button>
+      <button class="btn primary" id="manualSaveBtn">Add Job</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit company modal -->
+<div class="modal-backdrop" id="editCompanyModal">
+  <div class="modal">
+    <h3>Edit Company</h3>
+    <div class="form-group">
+      <label>Company Name</label>
+      <input type="text" id="ec_name" />
+    </div>
+    <div class="form-group">
+      <label id="ec_tokenLabel">Careers URL</label>
+      <input type="text" id="ec_token" />
+      <div class="hint" id="ec_tokenHint">Where you check for jobs.</div>
+    </div>
+    <div class="form-group">
+      <label>Tag</label>
+      <input type="text" id="ec_tag" placeholder="utility, transit, prime, etc." />
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="editCompanyCancelBtn">Cancel</button>
+      <button class="btn primary" id="editCompanySaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Watch company modal -->
+<div class="modal-backdrop" id="watchModal">
+  <div class="modal">
+    <h3>Add Watched Company</h3>
+    <div class="form-group">
+      <label>Type</label>
+      <select id="w_type">
+        <option value="manual">Manual check (Workday/proprietary ATS)</option>
+        <option value="gh">Greenhouse-tracked (auto-pull jobs)</option>
+        <option value="lever">Lever-tracked (auto-pull jobs)</option>
+      </select>
+      <div class="hint">Choose Manual for primes like Northrop, Lockheed, BAE. Choose Greenhouse/Lever if you know the company uses one of those ATSes.</div>
+    </div>
+    <div class="form-group">
+      <label>Company Name</label>
+      <input type="text" id="w_name" placeholder="Northrop Grumman" />
+    </div>
+    <div class="form-group" id="w_tokenGroup">
+      <label id="w_tokenLabel">Careers URL</label>
+      <input type="text" id="w_token" placeholder="https://careers.northropgrumman.com" />
+      <div class="hint" id="w_tokenHint">Where you'd manually check for jobs.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="watchCancelBtn">Cancel</button>
+      <button class="btn primary" id="watchSaveBtn">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-backdrop" id="editModal">
+  <div class="modal">
+    <h3 id="editTitle">Edit Job</h3>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="e_status">
+        <option value="saved">Saved</option>
+        <option value="applied">Applied</option>
+        <option value="interview">Interview</option>
+        <option value="offer">Offer</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea id="e_notes"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn danger" id="editDeleteBtn">Delete</button>
+      <button class="btn" id="editCancelBtn">Cancel</button>
+      <button class="btn primary" id="editSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== US States with centroid coords for proximity calc ======
+const US_STATES = {
+  'AL': { name: 'Alabama',        lat: 32.806671, lng: -86.791130 },
+  'AK': { name: 'Alaska',         lat: 61.370716, lng: -152.404419 },
+  'AZ': { name: 'Arizona',        lat: 33.729759, lng: -111.431221 },
+  'AR': { name: 'Arkansas',       lat: 34.969704, lng: -92.373123 },
+  'CA': { name: 'California',     lat: 36.116203, lng: -119.681564 },
+  'CO': { name: 'Colorado',       lat: 39.059811, lng: -105.311104 },
+  'CT': { name: 'Connecticut',    lat: 41.597782, lng: -72.755371 },
+  'DE': { name: 'Delaware',       lat: 39.318523, lng: -75.507141 },
+  'DC': { name: 'D.C.',           lat: 38.897438, lng: -77.026817 },
+  'FL': { name: 'Florida',        lat: 27.766279, lng: -81.686783 },
+  'GA': { name: 'Georgia',        lat: 33.040619, lng: -83.643074 },
+  'HI': { name: 'Hawaii',         lat: 21.094318, lng: -157.498337 },
+  'ID': { name: 'Idaho',          lat: 44.240459, lng: -114.478828 },
+  'IL': { name: 'Illinois',       lat: 40.349457, lng: -88.986137 },
+  'IN': { name: 'Indiana',        lat: 39.849426, lng: -86.258278 },
+  'IA': { name: 'Iowa',           lat: 42.011539, lng: -93.210526 },
+  'KS': { name: 'Kansas',         lat: 38.526600, lng: -96.726486 },
+  'KY': { name: 'Kentucky',       lat: 37.668140, lng: -84.670067 },
+  'LA': { name: 'Louisiana',      lat: 31.169546, lng: -91.867805 },
+  'ME': { name: 'Maine',          lat: 44.693947, lng: -69.381927 },
+  'MD': { name: 'Maryland',       lat: 39.063946, lng: -76.802101 },
+  'MA': { name: 'Massachusetts',  lat: 42.230171, lng: -71.530106 },
+  'MI': { name: 'Michigan',       lat: 43.326618, lng: -84.536095 },
+  'MN': { name: 'Minnesota',      lat: 45.694454, lng: -93.900192 },
+  'MS': { name: 'Mississippi',    lat: 32.741646, lng: -89.678696 },
+  'MO': { name: 'Missouri',       lat: 38.456085, lng: -92.288368 },
+  'MT': { name: 'Montana',        lat: 46.921925, lng: -110.454353 },
+  'NE': { name: 'Nebraska',       lat: 41.125370, lng: -98.268082 },
+  'NV': { name: 'Nevada',         lat: 38.313515, lng: -117.055374 },
+  'NH': { name: 'New Hampshire',  lat: 43.452492, lng: -71.563896 },
+  'NJ': { name: 'New Jersey',     lat: 40.298904, lng: -74.521011 },
+  'NM': { name: 'New Mexico',     lat: 34.840515, lng: -106.248482 },
+  'NY': { name: 'New York',       lat: 42.165726, lng: -74.948051 },
+  'NC': { name: 'North Carolina', lat: 35.630066, lng: -79.806419 },
+  'ND': { name: 'North Dakota',   lat: 47.528912, lng: -99.784012 },
+  'OH': { name: 'Ohio',           lat: 40.388783, lng: -82.764915 },
+  'OK': { name: 'Oklahoma',       lat: 35.565342, lng: -96.928917 },
+  'OR': { name: 'Oregon',         lat: 44.572021, lng: -122.070938 },
+  'PA': { name: 'Pennsylvania',   lat: 40.590752, lng: -77.209755 },
+  'RI': { name: 'Rhode Island',   lat: 41.680893, lng: -71.511780 },
+  'SC': { name: 'South Carolina', lat: 33.856892, lng: -80.945007 },
+  'SD': { name: 'South Dakota',   lat: 44.299782, lng: -99.438828 },
+  'TN': { name: 'Tennessee',      lat: 35.747845, lng: -86.692345 },
+  'TX': { name: 'Texas',          lat: 31.054487, lng: -97.563461 },
+  'UT': { name: 'Utah',           lat: 40.150032, lng: -111.862434 },
+  'VT': { name: 'Vermont',        lat: 44.045876, lng: -72.710686 },
+  'VA': { name: 'Virginia',       lat: 37.769337, lng: -78.169968 },
+  'WA': { name: 'Washington',     lat: 47.400902, lng: -121.490494 },
+  'WV': { name: 'West Virginia',  lat: 38.491226, lng: -80.954453 },
+  'WI': { name: 'Wisconsin',      lat: 44.268543, lng: -89.616508 },
+  'WY': { name: 'Wyoming',        lat: 42.755966, lng: -107.302490 }
+};
+const STATE_FULL_TO_ABBR = {};
+Object.entries(US_STATES).forEach(([abbr, info]) => {
+  STATE_FULL_TO_ABBR[info.name.toLowerCase()] = abbr;
+});
+
+// ====== Resume / keyword matching ======
+// Stopwords — common English + resume/JD filler that shouldn't count as skills
+const STOPWORDS = new Set([
+  'the','a','an','and','or','but','if','then','else','when','at','by','for','with','about','against',
+  'between','into','through','during','before','after','above','below','to','from','up','down','in',
+  'out','on','off','over','under','again','further','once','here','there','all','any','both','each',
+  'few','more','most','other','some','such','no','nor','not','only','own','same','so','than','too',
+  'very','can','will','just','should','now','of','as','is','are','was','were','be','been','being',
+  'have','has','had','do','does','did','doing','this','that','these','those','i','you','he','she',
+  'we','they','it','its','our','your','their','his','her','them','us','me','my','myself','yourself',
+  // Resume/JD filler
+  'experience','years','year','work','working','team','teams','role','position','candidate','company',
+  'job','jobs','responsibilities','requirements','required','preferred','qualifications','skills',
+  'ability','abilities','strong','excellent','proven','demonstrated','effective','knowledge','degree',
+  'bachelor','bachelors','master','masters','phd','university','college','school','equivalent',
+  'minimum','plus','years','must','should','will','can','able','including','include','includes',
+  'across','through','within','various','related','relevant','similar','support','supports','supported',
+  'maintain','maintains','maintained','develop','develops','developed','use','uses','used','using',
+  'provide','provides','provided','ensure','ensures','ensured','perform','performs','performed',
+  'lead','leads','led','leading','manage','manages','managed','managing','make','makes','made',
+  'time','full','part','new','high','low','large','small','well','best','good','great','one','two',
+  'three','our','their','also','well','etc','please','apply','employer','equal','opportunity',
+  'department','field','area','base','salary','range','remote','hybrid','onsite','onsite','onsite',
+  'will','also','within','across','etc','please','apply','position','role','jobs','job','hiring',
+  // Common filler verbs
+  'work','works','worked','help','helps','helped','build','builds','built','create','creates','created',
+  'design','designs','designed','test','tests','tested','testing','review','reviews','reviewed',
+  'plan','plans','planned','planning','meet','meets','meeting','meets','run','runs','ran','running',
+  // Single letters won't pass length filter anyway
+]);
+
+// Domain-specific multi-word terms we want to preserve as a single keyword
+const MULTIWORD_TERMS = [
+  'reliability engineer','reliability engineering','site reliability',
+  'process safety','asset integrity','pipeline integrity','asset management',
+  'condition monitoring','failure analysis','root cause','root cause analysis',
+  'risk assessment','risk management','reliability centered maintenance',
+  'six sigma','project management','quality assurance','quality control',
+  'machine learning','data analysis','data science','statistical analysis',
+  'fault tree','fault tree analysis','fmea','rcm','rca','hazop',
+  'mil-std','do-160','do-178','do-254','iso 9001','as9100',
+  'fluid mechanics','heat transfer','thermodynamics','signal processing',
+  'control systems','embedded systems','power electronics','power systems',
+  'oil and gas','natural gas','water treatment','wastewater',
+  'design for reliability','design for manufacturability','design of experiments',
+  'minitab','reliasoft','weibull','monte carlo','accelerated life testing',
+  'environmental testing','vibration testing','thermal testing'
+];
+
+function extractKeywords(text) {
+  if (!text) return new Set();
+  const lower = text.toLowerCase();
+  const found = new Set();
+  // First pass: multi-word terms
+  MULTIWORD_TERMS.forEach(term => {
+    if (lower.includes(term)) found.add(term);
+  });
+  // Second pass: single tokens (words and acronyms)
+  const tokens = lower.match(/[a-z][a-z0-9+\-/.]{2,}/g) || [];
+  tokens.forEach(t => {
+    // Skip if part of an already-captured multi-word term
+    if (STOPWORDS.has(t)) return;
+    if (t.length < 3) return;
+    if (/^\d+$/.test(t)) return;
+    found.add(t);
+  });
+  return found;
+}
+
+function getActiveResumeText() {
+  const resumes = STATE.settings.resumes || [];
+  const active = resumes.find(r => r.isActive) || resumes[0];
+  return active ? active.text : '';
+}
+
+function getActiveResumeKeywords() {
+  const text = getActiveResumeText();
+  if (!text) return null;
+  return extractKeywords(text);
+}
+
+function computeMatch(job) {
+  const resumeKws = getActiveResumeKeywords();
+  if (!resumeKws || !resumeKws.size) return null;
+  const jdText = (job.title || '') + ' ' + (job.description || '') + ' ' + (job.fullText || '');
+  const jdKws = extractKeywords(jdText);
+  if (!jdKws.size) return null;
+  const matched = [];
+  const missing = [];
+  jdKws.forEach(kw => {
+    if (resumeKws.has(kw)) matched.push(kw);
+    else missing.push(kw);
+  });
+  // Score = matched / total JD keywords (weighted toward harder-to-match longer terms)
+  let weightedMatch = 0, weightedTotal = 0;
+  jdKws.forEach(kw => {
+    const w = kw.includes(' ') ? 2 : 1; // multi-word terms weighted higher
+    weightedTotal += w;
+    if (resumeKws.has(kw)) weightedMatch += w;
+  });
+  const score = weightedTotal ? Math.round((weightedMatch / weightedTotal) * 100) : 0;
+  // Sort missing by relevance (multi-word first, then alpha)
+  missing.sort((a, b) => {
+    const am = a.includes(' ') ? 0 : 1;
+    const bm = b.includes(' ') ? 0 : 1;
+    if (am !== bm) return am - bm;
+    return a.localeCompare(b);
+  });
+  matched.sort((a, b) => {
+    const am = a.includes(' ') ? 0 : 1;
+    const bm = b.includes(' ') ? 0 : 1;
+    if (am !== bm) return am - bm;
+    return a.localeCompare(b);
+  });
+  return { score, matched, missing };
+}
+
+function matchScoreClass(score) {
+  if (score >= 60) return 'match-high';
+  if (score >= 35) return 'match-mid';
+  return 'match-low';
+}
+
+// ====== AI Tailoring (optional, multi-provider) ======
+function getActiveProvider() {
+  const p = STATE.settings.aiProvider || 'none';
+  if (p === 'anthropic' && STATE.settings.anthropicApiKey) return 'anthropic';
+  if (p === 'gemini' && STATE.settings.geminiApiKey) return 'gemini';
+  return 'none';
+}
+
+function hasAiAvailable() {
+  return getActiveProvider() !== 'none';
+}
+
+function renderApiKeyUI() {
+  const provider = STATE.settings.aiProvider || 'none';
+  // Update provider chips
+  document.querySelectorAll('#aiProviderRow .chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.provider === provider);
+  });
+  // Show/hide key sections
+  document.getElementById('geminiKeyGroup').style.display = provider === 'gemini' ? 'block' : 'none';
+  document.getElementById('anthropicKeyGroup').style.display = provider === 'anthropic' ? 'block' : 'none';
+  // Hint
+  const hint = document.getElementById('providerHint');
+  if (provider === 'none') hint.innerHTML = '<span style="color:var(--text-faint);">AI features disabled — match scores and gap rollup still work.</span>';
+  else if (provider === 'gemini') hint.innerHTML = '<span style="color:var(--gc-green);">Using Google Gemini.</span>';
+  else hint.innerHTML = '<span style="color:var(--gc-green);">Using Anthropic Claude.</span>';
+  // Hydrate key inputs
+  const aIn = document.getElementById('anthropicApiKey');
+  if (aIn) aIn.value = STATE.settings.anthropicApiKey || '';
+  const gIn = document.getElementById('geminiApiKey');
+  if (gIn) gIn.value = STATE.settings.geminiApiKey || '';
+  // Highlight active Gemini model
+  const currentModel = STATE.settings.aiModelGemini || 'gemini-2.5-flash-lite';
+  document.querySelectorAll('#geminiModelRow .chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.geminiModel === currentModel);
+  });
+  // Usage
+  const usage = document.getElementById('apiUsageInfo');
+  if (usage && STATE.settings.aiUsage) {
+    const c = STATE.settings.aiUsage.calls || 0;
+    usage.textContent = c ? `${c} AI tailoring calls on this device` : '';
+  }
+}
+
+// Provider chips
+document.querySelectorAll('#aiProviderRow .chip').forEach(c => {
+  c.addEventListener('click', async () => {
+    STATE.settings.aiProvider = c.dataset.provider;
+    await saveSettings();
+    renderApiKeyUI();
+    if (STATE.searchResults.length) renderSearchResults();
+    toast(c.dataset.provider === 'none' ? 'AI disabled' : 'Provider set');
+  });
+});
+
+// Gemini model picker chips
+document.querySelectorAll('#geminiModelRow .chip').forEach(c => {
+  c.addEventListener('click', async () => {
+    STATE.settings.aiModelGemini = c.dataset.geminiModel;
+    await saveSettings();
+    renderApiKeyUI();
+    toast(`Model set: ${c.dataset.geminiModel}`);
+  });
+});
+
+// Anthropic key handlers
+document.getElementById('saveApiKeyBtn').addEventListener('click', async () => {
+  const k = document.getElementById('anthropicApiKey').value.trim();
+  STATE.settings.anthropicApiKey = k;
+  await saveSettings();
+  renderApiKeyUI();
+  toast(k ? 'Anthropic key saved' : 'Key cleared');
+  if (STATE.searchResults.length) renderSearchResults();
+});
+document.getElementById('clearApiKeyBtn').addEventListener('click', async () => {
+  if (!confirm('Remove Anthropic key from this device?')) return;
+  STATE.settings.anthropicApiKey = '';
+  document.getElementById('anthropicApiKey').value = '';
+  await saveSettings();
+  renderApiKeyUI();
+  toast('Removed');
+  if (STATE.searchResults.length) renderSearchResults();
+});
+document.getElementById('testApiKeyBtn').addEventListener('click', async () => {
+  const status = document.getElementById('apiKeyStatus');
+  status.innerHTML = '<span style="color:var(--text-dim);">Testing…</span>';
+  const k = STATE.settings.anthropicApiKey;
+  if (!k) { status.innerHTML = '<span style="color:var(--gc-red);">No key entered</span>'; return; }
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': k,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: STATE.settings.aiModelAnthropic || 'claude-haiku-4-5-20251001',
+        max_tokens: 16,
+        messages: [{ role: 'user', content: 'Reply with only the word OK' }]
+      })
+    });
+    if (res.ok) status.innerHTML = '<span style="color:var(--gc-green);">✓ Anthropic key works.</span>';
+    else {
+      const err = await res.text();
+      status.innerHTML = `<span style="color:var(--gc-red);">✗ ${res.status}: ${escapeHtml(err.slice(0, 200))}</span>`;
+    }
+  } catch (e) {
+    status.innerHTML = `<span style="color:var(--gc-red);">✗ Network error: ${escapeHtml(e.message)}</span>`;
+  }
+});
+
+// Gemini key handlers
+document.getElementById('saveGeminiKeyBtn').addEventListener('click', async () => {
+  const k = document.getElementById('geminiApiKey').value.trim();
+  STATE.settings.geminiApiKey = k;
+  await saveSettings();
+  renderApiKeyUI();
+  toast(k ? 'Gemini key saved' : 'Key cleared');
+  if (STATE.searchResults.length) renderSearchResults();
+});
+document.getElementById('clearGeminiKeyBtn').addEventListener('click', async () => {
+  if (!confirm('Remove Gemini key from this device?')) return;
+  STATE.settings.geminiApiKey = '';
+  document.getElementById('geminiApiKey').value = '';
+  await saveSettings();
+  renderApiKeyUI();
+  toast('Removed');
+  if (STATE.searchResults.length) renderSearchResults();
+});
+document.getElementById('testGeminiKeyBtn').addEventListener('click', async () => {
+  const status = document.getElementById('geminiKeyStatus');
+  status.innerHTML = '<span style="color:var(--text-dim);">Testing…</span>';
+  const k = STATE.settings.geminiApiKey;
+  if (!k) { status.innerHTML = '<span style="color:var(--gc-red);">No key entered</span>'; return; }
+  try {
+    const model = STATE.settings.aiModelGemini || 'gemini-2.0-flash';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(k)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: 'Reply with only the word OK' }] }],
+        generationConfig: { maxOutputTokens: 16 }
+      })
+    });
+    if (res.ok) status.innerHTML = '<span style="color:var(--gc-green);">✓ Gemini key works.</span>';
+    else {
+      const err = await res.text();
+      status.innerHTML = `<span style="color:var(--gc-red);">✗ ${res.status}: ${escapeHtml(err.slice(0, 200))}</span>`;
+    }
+  } catch (e) {
+    status.innerHTML = `<span style="color:var(--gc-red);">✗ Network error: ${escapeHtml(e.message)}</span>`;
+  }
+});
+
+function buildTailoringPrompt(job, resumeText) {
+  const match = computeMatch(job);
+  const matchInfo = match
+    ? `Current keyword match: ${match.score}%. Top matched: ${match.matched.slice(0,8).join(', ')}. Top missing: ${match.missing.slice(0,10).join(', ')}.`
+    : '';
+  return `I'm applying for this job. Suggest specific, actionable resume edits to better fit it. Be concrete — quote what to add/change. Do not invent skills I don't have. If a missing keyword reflects something my resume already covers in different words, suggest the rewording. If a missing keyword is a real gap, say so honestly.
+
+JOB TITLE: ${job.title}
+COMPANY: ${job.company}
+LOCATION: ${job.location}
+JOB DESCRIPTION:
+${(job.description || job.fullText || '').slice(0, 4000)}
+
+MY RESUME (active version):
+${resumeText.slice(0, 6000)}
+
+${matchInfo}
+
+Please respond in this format:
+1. Top 3 specific edits to make (each one quote-and-replace style if possible)
+2. Honest gaps (skills the JD wants that I genuinely don't have)
+3. One-line summary of overall fit`;
+}
+
+async function callAnthropic(prompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': STATE.settings.anthropicApiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: STATE.settings.aiModelAnthropic || 'claude-haiku-4-5-20251001',
+      max_tokens: 1024,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Anthropic ${res.status}: ${err.slice(0, 300)}`);
+  }
+  const data = await res.json();
+  const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('\n');
+  const inputTok = data.usage?.input_tokens || 0;
+  const outputTok = data.usage?.output_tokens || 0;
+  // Haiku 4.5: ~$1/MTok input, ~$5/MTok output
+  const cost = (inputTok / 1_000_000) * 1 + (outputTok / 1_000_000) * 5;
+  return {
+    text,
+    meta: `${inputTok}/${outputTok} tokens · ~$${cost.toFixed(4)} · Claude Haiku 4.5`
+  };
+}
+
+async function callGemini(prompt) {
+  const model = STATE.settings.aiModelGemini || 'gemini-2.0-flash';
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(STATE.settings.geminiApiKey)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 1024, temperature: 0.4 }
+    })
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Gemini ${res.status}: ${err.slice(0, 300)}`);
+  }
+  const data = await res.json();
+  const text = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('\n');
+  const usage = data.usageMetadata || {};
+  return {
+    text: text || '(Empty response)',
+    meta: `${usage.promptTokenCount || 0}/${usage.candidatesTokenCount || 0} tokens · free tier · Gemini 2.0 Flash`
+  };
+}
+
+async function tailorResumeForJob(job, btnEl, targetEl) {
+  const resumeText = getActiveResumeText();
+  if (!resumeText) { toast('Save a resume first'); return; }
+  const provider = getActiveProvider();
+  if (provider === 'none') { toast('Pick an AI provider on Resume tab'); return; }
+
+  btnEl.disabled = true;
+  targetEl.style.display = 'block';
+  targetEl.innerHTML = `
+    <div class="ai-suggestion-header">
+      <span>AI Tailoring · ${provider === 'gemini' ? 'Gemini' : 'Claude'}</span>
+    </div>
+    <div class="ai-loading">Analyzing match…</div>
+  `;
+
+  const prompt = buildTailoringPrompt(job, resumeText);
+
+  try {
+    const result = provider === 'gemini' ? await callGemini(prompt) : await callAnthropic(prompt);
+
+    STATE.settings.aiUsage = STATE.settings.aiUsage || { calls: 0 };
+    STATE.settings.aiUsage.calls = (STATE.settings.aiUsage.calls || 0) + 1;
+    await saveSettings();
+
+    targetEl.innerHTML = `
+      <div class="ai-suggestion-header">
+        <span>AI Tailoring · ${provider === 'gemini' ? 'Gemini' : 'Claude'}</span>
+        <span class="ai-suggestion-meta">${escapeHtml(result.meta)}</span>
+      </div>
+      <div>${escapeHtml(result.text)}</div>
+    `;
+  } catch (e) {
+    targetEl.innerHTML = `
+      <div class="ai-suggestion-header"><span>AI Tailoring · ${provider}</span></div>
+      <div style="color:var(--gc-red);font-size:12px;">${escapeHtml(e.message)}</div>
+    `;
+  } finally {
+    btnEl.disabled = false;
+  }
+}
+
+// ====== DMV-specific watchlist defaults (manual-check companies) ======
+// Curated for: petroleum BS + reliability MS, GC holder, DMV-bound
+const DEFAULT_DMV_WATCHLIST = [
+  // ===== Utilities & Energy (DMV) — strong reliability fit, GC-friendly =====
+  { name: 'Dominion Energy',       source: 'manual', token: 'https://careers.dominionenergy.com', atsType: 'workday', tag: 'utility' },
+  { name: 'Pepco / Exelon',        source: 'manual', token: 'https://careers.exeloncorp.com',     atsType: 'workday', tag: 'utility' },
+  { name: 'BGE (Exelon)',          source: 'manual', token: 'https://careers.exeloncorp.com',     atsType: 'workday', tag: 'utility' },
+  { name: 'Washington Gas',        source: 'manual', token: 'https://www.washingtongas.com/careers', atsType: 'proprietary', tag: 'utility' },
+  { name: 'WSSC Water',            source: 'manual', token: 'https://www.wsscwater.com/careers',  atsType: 'proprietary', tag: 'utility' },
+  { name: 'DC Water',              source: 'manual', token: 'https://www.dcwater.com/careers',    atsType: 'proprietary', tag: 'utility' },
+
+  // ===== Transit (definitive reliability roles, GC-friendly) =====
+  { name: 'WMATA (Metro)',         source: 'manual', token: 'https://wmata.com/about/careers/',   atsType: 'peoplesoft', tag: 'transit' },
+  { name: 'MTA Maryland',          source: 'manual', token: 'https://www.mta.maryland.gov/careers', atsType: 'proprietary', tag: 'transit' },
+  { name: 'VRE',                   source: 'manual', token: 'https://www.vre.org/about/employment/', atsType: 'proprietary', tag: 'transit' },
+
+  // ===== Federal civilian (varies on GC eligibility — read each posting) =====
+  { name: 'NRC',                   source: 'manual', token: 'https://www.usajobs.gov/Search/Results?a=NQ00', atsType: 'usajobs', tag: 'federal' },
+  { name: 'NIST',                  source: 'manual', token: 'https://www.usajobs.gov/Search/Results?a=CM00', atsType: 'usajobs', tag: 'federal' },
+  { name: 'FAA',                   source: 'manual', token: 'https://www.faa.gov/jobs',           atsType: 'proprietary', tag: 'federal' },
+  { name: 'PHMSA (DOT)',           source: 'manual', token: 'https://www.usajobs.gov/Search/Results?a=TD18', atsType: 'usajobs', tag: 'federal' },
+  { name: 'FERC',                  source: 'manual', token: 'https://www.ferc.gov/careers',       atsType: 'usajobs', tag: 'federal' },
+  { name: 'EIA',                   source: 'manual', token: 'https://www.eia.gov/about/careers/', atsType: 'usajobs', tag: 'federal' },
+
+  // ===== Federal labs & FFRDCs (mostly citizenship-required, but worth checking) =====
+  { name: 'Johns Hopkins APL',     source: 'manual', token: 'https://www.jhuapl.edu/careers',     atsType: 'proprietary', tag: 'ffrdc' },
+  { name: 'MITRE',                 source: 'manual', token: 'https://www.mitre.org/careers',      atsType: 'workday', tag: 'ffrdc' },
+  { name: 'Aerospace Corporation', source: 'manual', token: 'https://careers.aerospace.org',      atsType: 'workday', tag: 'ffrdc' },
+  { name: 'NASA Goddard',          source: 'manual', token: 'https://www.usajobs.gov/Search/Results?a=NN21', atsType: 'usajobs', tag: 'federal' },
+
+  // ===== Defense primes (citizenship usually required) =====
+  { name: 'Northrop Grumman',      source: 'manual', token: 'https://jobs.northropgrumman.com/careers?State=Maryland', atsType: 'eightfold', tag: 'prime' },
+  { name: 'Lockheed Martin',       source: 'manual', token: 'https://www.lockheedmartinjobs.com',     atsType: 'workday', tag: 'prime' },
+  { name: 'BAE Systems',           source: 'manual', token: 'https://jobs.baesystems.com/global/en', atsType: 'workday', tag: 'prime' },
+  { name: 'Leidos',                source: 'manual', token: 'https://careers.leidos.com',          atsType: 'workday', tag: 'prime' },
+  { name: 'SAIC',                  source: 'manual', token: 'https://jobs.saic.com',               atsType: 'workday', tag: 'prime' },
+  { name: 'Booz Allen Hamilton',   source: 'manual', token: 'https://careers.boozallen.com',       atsType: 'workday', tag: 'prime' },
+  { name: 'L3Harris',              source: 'manual', token: 'https://careers.l3harris.com',        atsType: 'workday', tag: 'prime' },
+
+  // ===== Engineering consulting (often GC-friendly) =====
+  { name: 'AECOM',                 source: 'manual', token: 'https://aecom.jobs',                  atsType: 'proprietary', tag: 'consulting' },
+  { name: 'Jacobs',                source: 'manual', token: 'https://careers.jacobs.com',          atsType: 'workday', tag: 'consulting' },
+  { name: 'WSP',                   source: 'manual', token: 'https://careers.wsp.com',             atsType: 'workday', tag: 'consulting' },
+  { name: 'Black & Veatch',        source: 'manual', token: 'https://careers.bv.com',              atsType: 'workday', tag: 'consulting' },
+  { name: 'HDR',                   source: 'manual', token: 'https://www.hdrinc.com/careers',      atsType: 'workday', tag: 'consulting' },
+
+  // ===== Reliability-specific consultancies (GC-friendly) =====
+  { name: 'ABS Group',             source: 'manual', token: 'https://www.abs-group.com/Careers/', atsType: 'proprietary', tag: 'reliability' },
+  { name: 'DNV',                   source: 'manual', token: 'https://careers.dnv.com',             atsType: 'workday', tag: 'reliability' },
+
+  // ===== Energy/petroleum-leveraging (DMV-located) =====
+  { name: 'API (Petroleum Inst)',  source: 'manual', token: 'https://www.api.org/careers',         atsType: 'proprietary', tag: 'energy-policy' },
+  { name: 'Wood Mackenzie',        source: 'manual', token: 'https://www.woodmac.com/careers',     atsType: 'workday', tag: 'energy-policy' },
+  { name: 'S&P Global Commodity',  source: 'manual', token: 'https://careers.spglobal.com',        atsType: 'workday', tag: 'energy-policy' },
+
+  // ===== Adjunct teaching (part-time fit) =====
+  { name: 'UMD (College Park)',    source: 'manual', token: 'https://ejobs.umd.edu',               atsType: 'peoplesoft', tag: 'academic' },
+  { name: 'GMU',                   source: 'manual', token: 'https://jobs.gmu.edu',                atsType: 'peoplesoft', tag: 'academic' },
+  { name: 'JHU',                   source: 'manual', token: 'https://jobs.jhu.edu',                atsType: 'workday', tag: 'academic' },
+  { name: 'GW',                    source: 'manual', token: 'https://www.gwu.jobs',                atsType: 'workday', tag: 'academic' },
+  { name: 'UMBC',                  source: 'manual', token: 'https://hr.umbc.edu/jobs',            atsType: 'peoplesoft', tag: 'academic' }
+];
+
+// ====== Defaults — verified working tokens ======
+const DEFAULT_GH_BOARDS = [
+  // Defense, robotics, autonomy
+  'andurilindustries',          // Anduril
+  'vannevarlabs',               // Vannevar Labs (defense AI)
+  'defenseunicorns',            // Defense Unicorns (defense software)
+  'sphinxdefense',              // Sphinx Defense
+  'appliedintuition',           // Applied Intuition (autonomous vehicles)
+  'aurorainnovation',           // Aurora (autonomous trucking)
+  // Aerospace, rockets, satellites
+  'spacex',                     // SpaceX
+  'rocketlab',                  // Rocket Lab — has Middle River, MD facility
+  'Relativity',                 // Relativity Space
+  'stokespacetechnologies',     // Stoke Space
+  'astranis',                   // Astranis (GC-friendly explicit)
+  'terranorbitalcorporation',   // Terran Orbital
+  'muonspace',                  // Muon Space
+  'epirus',                     // Epirus (counter-UAS)
+  // Aviation
+  'archer56'                    // Archer (eVTOL)
+];
+const DEFAULT_LEVER_BOARDS = [
+  'shieldai',                   // Shield AI (defense AI/autonomy)
+  'saronic',                    // Saronic (autonomous boats)
+  'CesiumAstro',                // CesiumAstro (aerospace electronics)
+  'hermeus',                    // Hermeus (hypersonic)
+  'orbaerospace',               // Orb Aerospace (drones, MI)
+  'cfsenergy'                   // Commonwealth Fusion Systems
+];
+
+const STATE = {
+  settings: {
+    ghBoards: [...DEFAULT_GH_BOARDS],
+    leverBoards: [...DEFAULT_LEVER_BOARDS],
+    excludeKeywords: ['site reliability', 'sre', 'devops', 'platform engineer', 'software reliability', 'cloud reliability'],
+    citizenshipMode: 'open',
+    selectedStates: [],
+    payMins: [],
+    payIncludeUnspecified: true,
+    sortMode: 'default',
+    homeState: '',
+    watchedCompanies: [],     // array of { name, source: 'api'|'manual', token?, slug?, careersUrl?, addedAt }
+    watchedFilter: false,     // true = show only jobs from watched companies in search
+    seenJobIds: {},           // { jobId: true } — for NEW detection
+    employmentTypes: [],      // array of 'full-time' | 'part-time' | 'contract' | 'intern' — empty = all
+    resumes: [],              // array of { id, name, tag, text, isActive, createdAt }
+    applicationChecklists: {}, // { jobId: { resumeTailored, coverLetter, references, portfolio, submitted, followUp } }
+    aiProvider: 'none',       // 'none' | 'anthropic' | 'gemini'
+    anthropicApiKey: '',
+    geminiApiKey: '',
+    aiModelAnthropic: 'claude-haiku-4-5-20251001',
+    aiModelGemini: 'gemini-2.5-flash-lite',
+    aiUsage: { calls: 0 }
+  },
+  tracked: [],
+  searchResults: [],
+  editingId: null
+};
+
+// ====== Citizenship detection ======
+const GC_FRIENDLY_PHRASES = [
+  'u.s. person', 'us person', 'u.s. persons', 'us persons',
+  'permanent resident', 'green card', 'green-card',
+  'no sponsorship needed', 'no sponsorship required', 'do not sponsor',
+  'authorized to work in the united states', 'authorized to work in the u.s.',
+  'lawful permanent resident', 'protected individual',
+  'itar u.s. person', 'itar us person',
+  'refugee/asylee', 'asylee status'
+];
+const CITIZENS_ONLY_PHRASES = [
+  'must be a u.s. citizen', 'must be a us citizen', 'must be a united states citizen',
+  'u.s. citizenship required', 'us citizenship required', 'united states citizenship required',
+  'u.s. citizens only', 'us citizens only', 'citizens only',
+  'sole u.s. citizenship', 'native u.s. citizen', 'must hold u.s. citizenship',
+  'must hold us citizenship', 'restricted to u.s. citizens'
+];
+
+function detectCitizenshipStatus(text) {
+  if (!text) return 'unknown';
+  const t = text.toLowerCase();
+  if (GC_FRIENDLY_PHRASES.some(p => t.includes(p))) return 'gc-friendly';
+  if (CITIZENS_ONLY_PHRASES.some(p => t.includes(p))) return 'citizens-only';
+  return 'unknown';
+}
+
+// ====== Location parsing ======
+function parseStates(locationStr) {
+  if (!locationStr) return ['Unknown'];
+  const s = locationStr.toLowerCase();
+  const states = new Set();
+
+  // Remote detection
+  if (/\bremote\b/.test(s)) states.add('Remote');
+
+  // Match state abbreviations (word boundaries, comma-separated)
+  const abbrMatches = locationStr.match(/\b([A-Z]{2})\b/g) || [];
+  abbrMatches.forEach(m => {
+    if (US_STATES[m]) states.add(m);
+  });
+
+  // Match full state names
+  for (const [name, abbr] of Object.entries(STATE_FULL_TO_ABBR)) {
+    // Use simple substring; longer names should win, but Set handles dedup
+    if (s.includes(name)) states.add(abbr);
+  }
+
+  if (states.size === 0) return ['Unknown'];
+  return Array.from(states);
+}
+
+// ====== Pay parsing ======
+function parsePay(text) {
+  if (!text) return null;
+  // Normalize: remove commas in numbers
+  const cleaned = text.replace(/(\d),(\d)/g, '$1$2');
+  // Multiple regex patterns to catch common formats
+  const patterns = [
+    // $120000 - $160000
+    /\$\s?(\d{4,7})\s*(?:-|–|—|to|–)\s*\$?\s?(\d{4,7})/i,
+    // $120k - $160k or $120K-$160K
+    /\$\s?(\d{2,3})\s?[kK]\s*(?:-|–|—|to)\s*\$?\s?(\d{2,3})\s?[kK]/i,
+    // $120 - $160k (k only at end)
+    /\$\s?(\d{2,3})\s*(?:-|–|—|to)\s*\$?\s?(\d{2,3})\s?[kK]/i,
+  ];
+  for (const re of patterns) {
+    const m = cleaned.match(re);
+    if (m) {
+      let min = parseInt(m[1]);
+      let max = parseInt(m[2]);
+      if (min < 1000) min *= 1000;
+      if (max < 1000) max *= 1000;
+      // Sanity range
+      if (min >= 30000 && min <= 1000000 && max >= min && max <= 2000000) {
+        return { min, max };
+      }
+    }
+  }
+  return null;
+}
+
+function formatPay(pay) {
+  if (!pay) return '';
+  return `$${Math.round(pay.min/1000)}k–$${Math.round(pay.max/1000)}k`;
+}
+
+// ====== Employment type detection ======
+function detectEmploymentType(text, structuredHint) {
+  // structuredHint comes from API metadata when available
+  if (structuredHint) {
+    const h = String(structuredHint).toLowerCase();
+    if (/intern/.test(h)) return 'intern';
+    if (/contract|temp|temporary/.test(h)) return 'contract';
+    if (/part.?time/.test(h)) return 'part-time';
+    if (/full.?time|regular/.test(h)) return 'full-time';
+  }
+  if (!text) return 'unknown';
+  const t = text.toLowerCase();
+  // Order matters — check specific terms before general ones
+  if (/\bintern(ship)?\b|\bco-?op\b/.test(t)) return 'intern';
+  if (/\bpart.?time\b/.test(t)) return 'part-time';
+  if (/\bcontract\b|\btemporary\b|\btemp\b|\bcontractor\b/.test(t)) return 'contract';
+  if (/\bfull.?time\b/.test(t)) return 'full-time';
+  return 'unknown';
+}
+
+// ====== Distance calc ======
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 3959; // miles
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng/2)**2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function jobDistanceFromHome(job, homeAbbr) {
+  if (!homeAbbr || !US_STATES[homeAbbr]) return Infinity;
+  if (!job.parsedStates || !job.parsedStates.length) return Infinity;
+  const h = US_STATES[homeAbbr];
+  let min = Infinity;
+  for (const s of job.parsedStates) {
+    if (s === 'Remote') return 0; // Remote = "available wherever you are"
+    if (s === 'Unknown') continue;
+    const info = US_STATES[s];
+    if (info) {
+      const d = haversine(h.lat, h.lng, info.lat, info.lng);
+      if (d < min) min = d;
+    }
+  }
+  return min;
+}
+
+function stripHtml(html) {
+  if (!html) return '';
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
+// ====== Storage abstraction ======
+const Storage = {
+  backend: null,
+  _memory: {},
+  detect() {
+    if (typeof window.storage === 'object' && window.storage !== null && typeof window.storage.get === 'function') {
+      this.backend = 'artifact';
+      return;
+    }
+    try {
+      const k = '__ramtrack_test__';
+      localStorage.setItem(k, '1');
+      localStorage.removeItem(k);
+      this.backend = 'localStorage';
+      return;
+    } catch (e) {}
+    this.backend = 'memory';
+  },
+  async get(key) {
+    if (this.backend === 'artifact') {
+      try {
+        const r = await window.storage.get(key);
+        return r && r.value ? r.value : null;
+      } catch (e) { return null; }
+    }
+    if (this.backend === 'localStorage') {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    return this._memory[key] || null;
+  },
+  async set(key, value) {
+    if (this.backend === 'artifact') {
+      try { await window.storage.set(key, value); return true; } catch (e) { return false; }
+    }
+    if (this.backend === 'localStorage') {
+      try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
+    }
+    this._memory[key] = value;
+    return true;
+  },
+  describe() {
+    return {
+      'artifact': 'Claude artifact runtime',
+      'localStorage': 'Browser localStorage (persistent)',
+      'memory': 'In-memory only (will not survive refresh)'
+    }[this.backend] || 'Unknown';
+  }
+};
+
+async function loadState() {
+  Storage.detect();
+  let isFirstRun = false;
+  try {
+    const s = await Storage.get('settings');
+    if (s) STATE.settings = { ...STATE.settings, ...JSON.parse(s) };
+    else isFirstRun = true;
+  } catch (e) { isFirstRun = true; }
+  // Auto-migrate deprecated Gemini model
+  if (STATE.settings.aiModelGemini === 'gemini-2.0-flash' || STATE.settings.aiModelGemini === 'gemini-1.5-flash') {
+    STATE.settings.aiModelGemini = 'gemini-2.5-flash-lite';
+    await saveSettings();
+  }
+  // Migrate to two-slot resume model
+  if (typeof ensureTwoSlots === 'function') {
+    ensureTwoSlots();
+    await saveSettings();
+  }
+  try {
+    const t = await Storage.get('tracked_jobs');
+    if (t) STATE.tracked = JSON.parse(t);
+  } catch (e) {}
+  STATE.tracked.forEach(j => {
+    if (!j.citizenshipStatus) {
+      j.citizenshipStatus = j.requiresCitizenship ? 'citizens-only' : 'unknown';
+    }
+    if (!j.parsedStates) j.parsedStates = parseStates(j.location || '');
+    if (!j.parsedPay) j.parsedPay = parsePay((j.title || '') + ' ' + (j.notes || '') + ' ' + (j.description || ''));
+  });
+  // First run: seed DMV watchlist
+  if (isFirstRun && (!STATE.settings.watchedCompanies || !STATE.settings.watchedCompanies.length)) {
+    STATE.settings.watchedCompanies = DEFAULT_DMV_WATCHLIST.map(c => ({ ...c, addedAt: new Date().toISOString() }));
+    await saveSettings();
+  }
+}
+async function saveSettings() { await Storage.set('settings', JSON.stringify(STATE.settings)); }
+async function saveTracked() { await Storage.set('tracked_jobs', JSON.stringify(STATE.tracked)); }
+
+// ====== Toast ======
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ====== Watchlist helpers ======
+const SESSION = {
+  newJobIds: new Set()  // Jobs identified as new in current search session
+};
+
+function isCompanyWatched(companyName) {
+  if (!companyName) return false;
+  const norm = companyName.toLowerCase().trim();
+  return STATE.settings.watchedCompanies.some(c => c.name.toLowerCase().trim() === norm);
+}
+
+async function toggleWatchCompany(name, source = 'manual', extra = {}) {
+  if (!name) return;
+  const norm = name.toLowerCase().trim();
+  const idx = STATE.settings.watchedCompanies.findIndex(c => c.name.toLowerCase().trim() === norm);
+  if (idx >= 0) {
+    STATE.settings.watchedCompanies.splice(idx, 1);
+    toast(`Unwatched ${name}`);
+  } else {
+    STATE.settings.watchedCompanies.push({
+      name, source, addedAt: new Date().toISOString(), ...extra
+    });
+    toast(`Watching ${name}`);
+  }
+  await saveSettings();
+  updateWatchedCount();
+  renderCompanies();
+  if (STATE.searchResults.length) renderSearchResults();
+}
+
+function updateWatchedCount() {
+  const c = STATE.settings.watchedCompanies.length;
+  document.getElementById('watchedFilterCount').textContent = c ? `(${c})` : '';
+}
+
+function isJobNew(job) {
+  return job.id && SESSION.newJobIds.has(job.id);
+}
+
+async function markJobsSeen(jobs) {
+  // Persist all current jobs to seenJobIds for next refresh
+  jobs.forEach(j => { if (j.id) STATE.settings.seenJobIds[j.id] = true; });
+  // Cap to last 5000 IDs
+  const ids = Object.keys(STATE.settings.seenJobIds);
+  if (ids.length > 5000) {
+    STATE.settings.seenJobIds = {};
+    ids.slice(-5000).forEach(id => { STATE.settings.seenJobIds[id] = true; });
+  }
+  await saveSettings();
+}
+
+// ====== Tabs ======
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+    if (t.dataset.tab === 'tracking') renderTracking();
+    if (t.dataset.tab === 'companies') renderCompanies();
+    if (t.dataset.tab === 'resume') renderResume();
+  });
+});
+
+// ====== Resume slots (Primary + Alternate) ======
+
+// Lazy-loaded parsers
+let _mammothPromise = null;
+function loadMammoth() {
+  if (_mammothPromise) return _mammothPromise;
+  _mammothPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+    s.onload = () => resolve();
+    s.onerror = () => { _mammothPromise = null; reject(new Error('Failed to load .docx parser')); };
+    document.head.appendChild(s);
+  });
+  return _mammothPromise;
+}
+
+let _pdfJsPromise = null;
+function loadPdfJs() {
+  if (_pdfJsPromise) return _pdfJsPromise;
+  _pdfJsPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = () => {
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+      resolve();
+    };
+    s.onerror = () => { _pdfJsPromise = null; reject(new Error('Failed to load .pdf parser')); };
+    document.head.appendChild(s);
+  });
+  return _pdfJsPromise;
+}
+
+async function readTextFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsText(file);
+  });
+}
+
+async function readDocxFile(file) {
+  await loadMammoth();
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await window.mammoth.extractRawText({ arrayBuffer });
+  return result.value || '';
+}
+
+async function readPdfFile(file) {
+  await loadPdfJs();
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map(item => item.str || '').join(' ');
+    fullText += pageText + '\n';
+  }
+  return fullText;
+}
+
+async function parseResumeFile(file) {
+  const name = (file.name || '').toLowerCase();
+  if (name.endsWith('.txt')) return readTextFile(file);
+  if (name.endsWith('.docx')) return readDocxFile(file);
+  if (name.endsWith('.pdf')) return readPdfFile(file);
+  throw new Error('Unsupported file type — use .txt, .docx, or .pdf');
+}
+
+// Slot helpers
+function getSlot(slotKey) {
+  const id = slotKey === 'primary' ? 'r_primary' : 'r_alternate';
+  return STATE.settings.resumes.find(r => r.id === id);
+}
+
+function ensureTwoSlots() {
+  const r = STATE.settings.resumes || [];
+  let primary = r.find(x => x.id === 'r_primary');
+  let alternate = r.find(x => x.id === 'r_alternate');
+  if (!primary) {
+    // Migrate first existing or create empty
+    const cand = r.find(x => x.id !== 'r_alternate');
+    if (cand) {
+      cand.id = 'r_primary';
+      if (!cand.name) cand.name = 'Primary';
+      primary = cand;
+    } else {
+      primary = { id: 'r_primary', name: 'Primary', tag: '', text: '', isActive: true, createdAt: new Date().toISOString() };
+      r.push(primary);
+    }
+  }
+  if (!alternate) {
+    const cand = r.find(x => x.id !== 'r_primary' && x !== primary);
+    if (cand) {
+      cand.id = 'r_alternate';
+      if (!cand.name) cand.name = 'Alternate';
+      alternate = cand;
+    } else {
+      alternate = { id: 'r_alternate', name: 'Alternate', tag: '', text: '', isActive: false, createdAt: new Date().toISOString() };
+      r.push(alternate);
+    }
+  }
+  // Drop anything beyond the two slots
+  STATE.settings.resumes = [primary, alternate];
+  // Ensure exactly one is active
+  if (!primary.isActive && !alternate.isActive) primary.isActive = true;
+  if (primary.isActive && alternate.isActive) alternate.isActive = false;
+}
+
+function renderResume() {
+  ensureTwoSlots();
+  ['primary', 'alternate'].forEach(slot => {
+    const s = getSlot(slot);
+    document.getElementById('slotName-' + slot).value = s.name || '';
+    document.getElementById('slotTag-' + slot).value = s.tag || '';
+    document.getElementById('slotText-' + slot).value = s.text || '';
+    document.getElementById('activeSlot-' + slot).checked = !!s.isActive;
+    const status = document.getElementById('slotFileStatus-' + slot);
+    if (s.lastFileName) {
+      status.textContent = `Loaded from ${s.lastFileName}`;
+    } else {
+      status.textContent = '';
+    }
+  });
+  renderGapRollup();
+  renderApiKeyUI();
+}
+
+// Wire each slot
+['primary', 'alternate'].forEach(slot => {
+  const fileInput = document.getElementById('slotFile-' + slot);
+  const uploadBtn = document.getElementById('slotUploadBtn-' + slot);
+  const statusEl = document.getElementById('slotFileStatus-' + slot);
+
+  uploadBtn.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    statusEl.textContent = 'Reading…';
+    statusEl.style.color = 'var(--text-dim)';
+    try {
+      // Update status when library load is needed
+      const ext = file.name.toLowerCase().split('.').pop();
+      if (ext === 'docx' || ext === 'pdf') {
+        statusEl.textContent = `Loading ${ext} parser…`;
+      }
+      const text = await parseResumeFile(file);
+      const cleaned = text.replace(/\u0000/g, '').trim();
+      if (!cleaned) {
+        throw new Error('No text extracted (file may be image-based or empty)');
+      }
+      document.getElementById('slotText-' + slot).value = cleaned;
+      // Stash filename for next render
+      const s = getSlot(slot);
+      s.lastFileName = file.name;
+      statusEl.textContent = `Loaded ${file.name} · ${cleaned.length.toLocaleString()} chars`;
+      statusEl.style.color = 'var(--gc-green)';
+      // Reset the file input so the same file can be re-uploaded
+      fileInput.value = '';
+    } catch (err) {
+      statusEl.textContent = `Failed: ${err.message}`;
+      statusEl.style.color = 'var(--gc-red)';
+      fileInput.value = '';
+    }
+  });
+
+  document.getElementById('slotSave-' + slot).addEventListener('click', async () => {
+    const s = getSlot(slot);
+    s.name = document.getElementById('slotName-' + slot).value.trim() || (slot === 'primary' ? 'Primary' : 'Alternate');
+    s.tag = document.getElementById('slotTag-' + slot).value.trim();
+    s.text = document.getElementById('slotText-' + slot).value.trim();
+    s.updatedAt = new Date().toISOString();
+    if (!s.text) {
+      delete s.lastFileName;
+    }
+    await saveSettings();
+    const kws = extractKeywords(s.text);
+    toast(s.text ? `Saved ${s.name} — ${kws.size} keywords detected` : `${s.name} cleared`);
+    renderResume();
+    if (STATE.searchResults.length) renderSearchResults();
+  });
+
+  document.getElementById('slotClear-' + slot).addEventListener('click', async () => {
+    const s = getSlot(slot);
+    if (!s.text && !s.name) return toast('Already empty');
+    if (!confirm(`Clear ${slot} slot? This wipes the text but keeps the slot.`)) return;
+    s.text = '';
+    s.tag = '';
+    delete s.lastFileName;
+    s.updatedAt = new Date().toISOString();
+    await saveSettings();
+    document.getElementById('slotText-' + slot).value = '';
+    document.getElementById('slotTag-' + slot).value = '';
+    document.getElementById('slotFileStatus-' + slot).textContent = '';
+    renderGapRollup();
+    if (STATE.searchResults.length) renderSearchResults();
+    toast(`${slot} cleared`);
+  });
+
+  document.getElementById('activeSlot-' + slot).addEventListener('change', async (e) => {
+    if (!e.target.checked) return;
+    STATE.settings.resumes.forEach(r => r.isActive = (r.id === 'r_' + slot));
+    await saveSettings();
+    renderGapRollup();
+    if (STATE.searchResults.length) renderSearchResults();
+    toast(`Active: ${getSlot(slot).name || slot}`);
+  });
+});
+
+function renderGapRollup() {
+  const el = document.getElementById('gapRollup');
+  const resumeKws = getActiveResumeKeywords();
+  if (!resumeKws || !resumeKws.size) {
+    el.innerHTML = '<div style="color:var(--text-faint);font-size:12px;">Save a resume above to see analysis.</div>';
+    return;
+  }
+  // Aggregate missing keywords across all current search results + tracked jobs
+  const counter = {};
+  let totalJobs = 0;
+  const allJobs = [...(STATE.searchResults || []), ...(STATE.tracked || [])];
+  allJobs.forEach(j => {
+    const m = computeMatch(j);
+    if (!m) return;
+    totalJobs++;
+    m.missing.forEach(kw => {
+      counter[kw] = (counter[kw] || 0) + 1;
+    });
+  });
+  if (!totalJobs) {
+    el.innerHTML = '<div style="color:var(--text-faint);font-size:12px;">Run a search or track some jobs to see which keywords appear most often in postings but are missing from your resume.</div>';
+    return;
+  }
+  // Top missing keywords
+  const sorted = Object.entries(counter)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 25);
+  const max = sorted[0]?.[1] || 1;
+  el.innerHTML = `
+    <div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">
+      Across <strong style="color:var(--accent);">${totalJobs}</strong> job${totalJobs===1?'':'s'} analyzed, these keywords appear most often in postings but are missing from your resume:
+    </div>
+    ${sorted.map(([kw, count]) => `
+      <div class="gap-item">
+        <span class="gap-keyword">${escapeHtml(kw)}</span>
+        <div class="gap-bar"><div class="gap-bar-fill" style="width:${(count/max)*100}%"></div></div>
+        <span class="gap-count">${count}/${totalJobs}</span>
+      </div>
+    `).join('')}
+  `;
+}
+
+// ====== Preset chips ======
+document.querySelectorAll('[data-preset]').forEach(c => {
+  c.addEventListener('click', () => {
+    document.getElementById('searchInput').value = c.dataset.preset;
+    document.querySelectorAll('[data-preset]').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    runSearch();
+  });
+});
+
+// ====== Citizenship view mode ======
+document.querySelectorAll('.seg-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.seg-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    STATE.settings.citizenshipMode = b.dataset.mode;
+    saveSettings();
+    if (STATE.searchResults.length) renderSearchResults();
+  });
+});
+
+// ====== State filter UI ======
+function buildStateGrid() {
+  const grid = document.getElementById('stateGrid');
+  grid.innerHTML = '';
+  const sorted = Object.keys(US_STATES).sort();
+  sorted.forEach(abbr => {
+    const btn = document.createElement('button');
+    btn.className = 'chip small';
+    btn.dataset.state = abbr;
+    btn.textContent = abbr;
+    btn.title = US_STATES[abbr].name;
+    if (STATE.settings.selectedStates.includes(abbr)) btn.classList.add('active');
+    btn.addEventListener('click', () => toggleState(abbr));
+    grid.appendChild(btn);
+  });
+}
+function toggleState(abbr) {
+  const idx = STATE.settings.selectedStates.indexOf(abbr);
+  if (idx >= 0) STATE.settings.selectedStates.splice(idx, 1);
+  else STATE.settings.selectedStates.push(abbr);
+  saveSettings();
+  refreshStateUI();
+  if (STATE.searchResults.length) renderSearchResults();
+}
+function refreshStateUI() {
+  document.querySelectorAll('#stateGrid .chip').forEach(c => {
+    c.classList.toggle('active', STATE.settings.selectedStates.includes(c.dataset.state));
+  });
+  document.getElementById('stateRemoteBtn').classList.toggle('active', STATE.settings.selectedStates.includes('Remote'));
+  const count = STATE.settings.selectedStates.length;
+  const badge = document.getElementById('stateCount');
+  badge.textContent = count;
+  badge.style.display = count ? 'inline-block' : 'none';
+}
+document.getElementById('stateRemoteBtn').addEventListener('click', () => toggleState('Remote'));
+document.getElementById('stateClearBtn').addEventListener('click', () => {
+  STATE.settings.selectedStates = [];
+  saveSettings();
+  refreshStateUI();
+  if (STATE.searchResults.length) renderSearchResults();
+});
+
+// ====== Employment type filter ======
+document.querySelectorAll('[data-emp-type]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const t = cb.dataset.empType;
+    if (cb.checked) {
+      if (!STATE.settings.employmentTypes.includes(t)) STATE.settings.employmentTypes.push(t);
+    } else {
+      STATE.settings.employmentTypes = STATE.settings.employmentTypes.filter(x => x !== t);
+    }
+    saveSettings();
+    refreshTypeUI();
+    if (STATE.searchResults.length) renderSearchResults();
+  });
+});
+function refreshTypeUI() {
+  document.querySelectorAll('[data-emp-type]').forEach(cb => {
+    cb.checked = STATE.settings.employmentTypes.includes(cb.dataset.empType);
+  });
+  const c = STATE.settings.employmentTypes.length;
+  const badge = document.getElementById('typeCount');
+  badge.textContent = c;
+  badge.style.display = c ? 'inline-block' : 'none';
+}
+
+// ====== Pay filter UI ======
+document.querySelectorAll('[data-pay-min]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const min = parseInt(cb.dataset.payMin);
+    if (cb.checked) {
+      if (!STATE.settings.payMins.includes(min)) STATE.settings.payMins.push(min);
+    } else {
+      STATE.settings.payMins = STATE.settings.payMins.filter(x => x !== min);
+    }
+    saveSettings();
+    refreshPayUI();
+    if (STATE.searchResults.length) renderSearchResults();
+  });
+});
+document.getElementById('payIncludeUnspecified').addEventListener('change', e => {
+  STATE.settings.payIncludeUnspecified = e.target.checked;
+  saveSettings();
+  if (STATE.searchResults.length) renderSearchResults();
+});
+function refreshPayUI() {
+  document.querySelectorAll('[data-pay-min]').forEach(cb => {
+    cb.checked = STATE.settings.payMins.includes(parseInt(cb.dataset.payMin));
+  });
+  document.getElementById('payIncludeUnspecified').checked = STATE.settings.payIncludeUnspecified;
+  const count = STATE.settings.payMins.length + (STATE.settings.payIncludeUnspecified ? 0 : 1);
+  const badge = document.getElementById('payCount');
+  badge.textContent = count;
+  badge.style.display = count ? 'inline-block' : 'none';
+}
+
+// ====== Sort UI ======
+document.querySelectorAll('input[name="sortMode"]').forEach(r => {
+  r.addEventListener('change', () => {
+    if (r.checked) {
+      if (r.value === 'proximity' && !STATE.settings.homeState) {
+        document.getElementById('proximityHint').style.display = 'block';
+        // revert
+        document.querySelector('input[name="sortMode"][value="default"]').checked = true;
+        return;
+      }
+      document.getElementById('proximityHint').style.display = 'none';
+      STATE.settings.sortMode = r.value;
+      saveSettings();
+      updateSortLabel();
+      if (STATE.searchResults.length) renderSearchResults();
+    }
+  });
+});
+function updateSortLabel() {
+  const labels = {
+    'default': 'Default',
+    'proximity': `Closest to ${STATE.settings.homeState || '—'}`,
+    'pay-desc': 'Highest pay',
+    'recent': 'Most recent'
+  };
+  document.getElementById('sortLabel').textContent = labels[STATE.settings.sortMode] || 'Default';
+}
+
+// ====== Search ======
+document.getElementById('searchBtn').addEventListener('click', runSearch);
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runSearch();
+});
+
+async function runSearch() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  // Allow empty query if watched filter is on (Show All Watched mode)
+  if (!q && !STATE.settings.watchedFilter) return toast('Enter a keyword');
+
+  const ghBoards = STATE.settings.ghBoards || [];
+  const leverBoards = STATE.settings.leverBoards || [];
+  const totalSources = ghBoards.length + leverBoards.length;
+
+  if (!totalSources) {
+    document.getElementById('searchResults').innerHTML = '<div class="empty"><span class="icon">⚙</span>No companies configured.<br>Go to Settings.</div>';
+    return;
+  }
+
+  // Snapshot of seen IDs BEFORE this search — anything not in this is "new"
+  const previouslySeen = { ...STATE.settings.seenJobIds };
+
+  STATE.searchResults = [];
+  SESSION.newJobIds = new Set();
+  document.getElementById('searchResults').innerHTML = '';
+  const progressEl = document.getElementById('searchProgress');
+
+  function processIncomingJobs(jobs) {
+    jobs.forEach(j => {
+      if (j.id && !previouslySeen[j.id]) SESSION.newJobIds.add(j.id);
+    });
+    STATE.searchResults.push(...jobs);
+  }
+
+  let done = 0;
+  const networkFails = [];
+  const httpFails = [];
+  function updateProgress(final = false) {
+    let banner = '';
+    if (final && networkFails.length === totalSources) {
+      banner = `<div style="background:rgba(194,85,85,0.1);border:1px solid var(--gc-red);padding:10px;margin-bottom:10px;color:var(--gc-red);font-size:11px;line-height:1.5;">
+        <strong>All network requests blocked.</strong> Open the file in Chrome/Safari, or host it (Netlify Drop, GitHub Pages).
+      </div>`;
+    } else if (final && networkFails.length) {
+      banner = `<div style="background:rgba(212,168,90,0.1);border:1px solid #6b5a3a;padding:8px 10px;margin-bottom:10px;color:var(--gc-yellow);font-size:11px;">
+        Network blocked for: ${networkFails.join(', ')}.
+      </div>`;
+    }
+    let httpBanner = '';
+    if (final && httpFails.length) {
+      httpBanner = `<div style="background:rgba(245,166,35,0.08);border-left:2px solid var(--accent);padding:6px 10px;margin-bottom:10px;font-size:11px;color:var(--text-dim);">
+        Bad tokens: ${httpFails.map(f => `${f.token} [${f.status}]`).join(', ')}
+      </div>`;
+    }
+    progressEl.innerHTML = banner + httpBanner + `
+      <div class="progress-bar">
+        Querying ${done}/${totalSources} companies
+        <div class="bar-track"><div class="bar-fill" style="width:${(done/totalSources)*100}%"></div></div>
+      </div>`;
+  }
+  updateProgress();
+
+  const tasks = [];
+  for (const token of ghBoards) {
+    tasks.push(
+      fetchGreenhouse(token, q)
+        .then(jobs => { processIncomingJobs(jobs); })
+        .catch(err => {
+          if (err.kind === 'network') networkFails.push('gh:' + token);
+          else httpFails.push({ token: 'gh:' + token, status: err.status });
+        })
+        .finally(() => { done++; updateProgress(); renderSearchResults(); })
+    );
+  }
+  for (const slug of leverBoards) {
+    tasks.push(
+      fetchLever(slug, q)
+        .then(jobs => { processIncomingJobs(jobs); })
+        .catch(err => {
+          if (err.kind === 'network') networkFails.push('lever:' + slug);
+          else httpFails.push({ token: 'lever:' + slug, status: err.status });
+        })
+        .finally(() => { done++; updateProgress(); renderSearchResults(); })
+    );
+  }
+
+  await Promise.all(tasks);
+  updateProgress(true);
+  // After all done, mark these results as seen for next refresh
+  await markJobsSeen(STATE.searchResults);
+  if (!networkFails.length && !httpFails.length) {
+    setTimeout(() => { progressEl.innerHTML = ''; }, 1200);
+  }
+}
+
+async function fetchGreenhouse(token, query) {
+  let res;
+  try {
+    res = await fetch(`https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(token)}/jobs?content=true`);
+  } catch (e) {
+    const err = new Error('network'); err.kind = 'network'; err.token = token; throw err;
+  }
+  if (!res.ok) {
+    const err = new Error('http ' + res.status); err.kind = 'http'; err.status = res.status; err.token = token; throw err;
+  }
+  const data = await res.json();
+  const jobs = data.jobs || [];
+  return jobs
+    .map(j => normalizeGreenhouse(j, token))
+    .filter(j => matchesQuery(j, query));
+}
+
+async function fetchLever(slug, query) {
+  let res;
+  try {
+    res = await fetch(`https://api.lever.co/v0/postings/${encodeURIComponent(slug)}?mode=json`);
+  } catch (e) {
+    const err = new Error('network'); err.kind = 'network'; err.token = slug; throw err;
+  }
+  if (!res.ok) {
+    const err = new Error('http ' + res.status); err.kind = 'http'; err.status = res.status; err.token = slug; throw err;
+  }
+  const data = await res.json();
+  return (Array.isArray(data) ? data : [])
+    .map(j => normalizeLever(j, slug))
+    .filter(j => matchesQuery(j, query));
+}
+
+function normalizeGreenhouse(j, token) {
+  const description = stripHtml(j.content || '');
+  const fullText = (j.title || '') + ' ' + description;
+  const location = j.location?.name || '—';
+  // Greenhouse may have employment type in metadata array
+  let typeHint = '';
+  if (Array.isArray(j.metadata)) {
+    const mt = j.metadata.find(m => /employment|job.?type/i.test(m.name || ''));
+    if (mt) typeHint = mt.value;
+  }
+  return {
+    id: 'gh_' + token + '_' + j.id,
+    title: j.title || 'Untitled',
+    company: prettifyToken(token),
+    location,
+    parsedStates: parseStates(location),
+    parsedPay: parsePay(description),
+    employmentType: detectEmploymentType(fullText, typeHint),
+    url: j.absolute_url || '',
+    description: description.slice(0, 600),
+    fullText,
+    posted: j.updated_at ? j.updated_at.slice(0, 10) : '',
+    source: 'Greenhouse',
+    citizenshipStatus: detectCitizenshipStatus(fullText)
+  };
+}
+
+function normalizeLever(j, slug) {
+  const descParts = [];
+  if (j.descriptionPlain) descParts.push(j.descriptionPlain);
+  if (Array.isArray(j.lists)) j.lists.forEach(l => descParts.push(stripHtml(l.content || '')));
+  if (j.additionalPlain) descParts.push(j.additionalPlain);
+  const description = descParts.join(' ').replace(/\s+/g, ' ').trim();
+  const fullText = (j.text || '') + ' ' + description;
+  const location = j.categories?.location || '—';
+  let parsedPay = null;
+  if (j.salaryRange?.min && j.salaryRange?.max) {
+    parsedPay = { min: j.salaryRange.min, max: j.salaryRange.max };
+  } else {
+    parsedPay = parsePay(description);
+  }
+  return {
+    id: 'lv_' + slug + '_' + j.id,
+    title: j.text || 'Untitled',
+    company: prettifyToken(slug),
+    location,
+    parsedStates: parseStates(location),
+    parsedPay,
+    employmentType: detectEmploymentType(fullText, j.categories?.commitment),
+    url: j.hostedUrl || '',
+    description: description.slice(0, 600),
+    fullText,
+    posted: j.createdAt ? new Date(j.createdAt).toISOString().slice(0, 10) : '',
+    source: 'Lever',
+    citizenshipStatus: detectCitizenshipStatus(fullText)
+  };
+}
+
+function prettifyToken(t) {
+  // Strip trailing digits common in slugs (archer56 → Archer)
+  const cleaned = t.replace(/\d+$/, '');
+  return cleaned.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+function matchesQuery(job, q) {
+  if (!q) return true;
+  return (job.fullText || '').toLowerCase().includes(q);
+}
+
+// ====== Filtering & sorting ======
+function passesView(job) {
+  // SRE/DevOps exclusion
+  const haystack = (job.title + ' ' + (job.description || '')).toLowerCase();
+  if (STATE.settings.excludeKeywords.some(kw => haystack.includes(kw.toLowerCase().trim()))) return false;
+  // Watched-only filter
+  if (STATE.settings.watchedFilter && !isCompanyWatched(job.company)) return false;
+  // Citizenship mode
+  if (STATE.settings.citizenshipMode === 'open' && job.citizenshipStatus === 'citizens-only') return false;
+  if (STATE.settings.citizenshipMode === 'gc-only' && job.citizenshipStatus !== 'gc-friendly') return false;
+  // State filter
+  if (STATE.settings.selectedStates.length) {
+    const jobStates = job.parsedStates || ['Unknown'];
+    const hit = STATE.settings.selectedStates.some(s => jobStates.includes(s));
+    if (!hit) return false;
+  }
+  // Pay filter
+  if (STATE.settings.payMins.length) {
+    const minRequired = Math.max(...STATE.settings.payMins);
+    if (!job.parsedPay) {
+      if (!STATE.settings.payIncludeUnspecified) return false;
+    } else if (job.parsedPay.max < minRequired) {
+      return false;
+    }
+  }
+  // Employment type filter
+  if (STATE.settings.employmentTypes.length) {
+    const jobType = job.employmentType || 'unknown';
+    if (!STATE.settings.employmentTypes.includes(jobType)) return false;
+  }
+  return true;
+}
+
+function sortJobs(jobs) {
+  const mode = STATE.settings.sortMode;
+  const arr = [...jobs];
+  if (mode === 'pay-desc') {
+    return arr.sort((a, b) => (b.parsedPay?.max || 0) - (a.parsedPay?.max || 0));
+  }
+  if (mode === 'recent') {
+    return arr.sort((a, b) => (b.posted || '').localeCompare(a.posted || ''));
+  }
+  if (mode === 'proximity' && STATE.settings.homeState) {
+    return arr.sort((a, b) =>
+      jobDistanceFromHome(a, STATE.settings.homeState) -
+      jobDistanceFromHome(b, STATE.settings.homeState)
+    );
+  }
+  // Default: citizenship → pay → posted
+  const order = { 'gc-friendly': 0, 'unknown': 1, 'citizens-only': 2 };
+  return arr.sort((a, b) => {
+    const c = (order[a.citizenshipStatus] ?? 1) - (order[b.citizenshipStatus] ?? 1);
+    if (c !== 0) return c;
+    const p = (b.parsedPay?.max || 0) - (a.parsedPay?.max || 0);
+    if (p !== 0) return p;
+    return (b.posted || '').localeCompare(a.posted || '');
+  });
+}
+
+function renderSearchResults() {
+  const el = document.getElementById('searchResults');
+  let filtered = STATE.searchResults.filter(passesView);
+  filtered = sortJobs(filtered);
+
+  document.getElementById('resultsLabel').innerHTML =
+    `Results <span style="color:var(--accent);font-family:var(--mono);">[${filtered.length}/${STATE.searchResults.length}]</span>`;
+
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty"><span class="icon">∅</span>No matches.<br>Try a broader keyword or relax filters.</div>';
+    return;
+  }
+
+  el.innerHTML = filtered.map(j => jobCardHtml(j, 'search')).join('');
+  el.querySelectorAll('[data-action="track"]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.id;
+      const job = STATE.searchResults.find(x => x.id === id);
+      if (job) trackJob(job);
+    });
+  });
+  el.querySelectorAll('[data-watch-company]').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      const company = b.dataset.watchCompany;
+      const job = STATE.searchResults.find(j => j.company === company);
+      const source = job?.source === 'Greenhouse' ? 'gh' : (job?.source === 'Lever' ? 'lever' : 'manual');
+      const tokenSource = source === 'gh' ? 'api' : (source === 'lever' ? 'api' : 'manual');
+      const extra = {};
+      if (job?.id) {
+        const parts = job.id.split('_');
+        if (job.source === 'Greenhouse') extra.token = parts[1];
+        if (job.source === 'Lever') extra.slug = parts[1];
+        extra.atsType = job.source.toLowerCase();
+      }
+      toggleWatchCompany(company, tokenSource, extra);
+    });
+  });
+  el.querySelectorAll('[data-toggle-match]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.toggleMatch;
+      const detail = document.getElementById('matchDetail-' + id);
+      if (detail) detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+  el.querySelectorAll('[data-ai-tailor]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.aiTailor;
+      const job = STATE.searchResults.find(x => x.id === id) || STATE.tracked.find(x => x.id === id);
+      const target = document.getElementById('aiSuggestion-' + id);
+      if (job && target) tailorResumeForJob(job, b, target);
+    });
+  });
+}
+
+function citizenshipLabel(status) {
+  if (status === 'gc-friendly') return '🟢 GC-Friendly';
+  if (status === 'citizens-only') return '🔴 Citizens Only';
+  return '🟡 Unclear';
+}
+
+function jobCardHtml(job, mode) {
+  const tracked = STATE.tracked.find(t => t.id === job.id);
+  const watched = isCompanyWatched(job.company);
+  const isNew = mode === 'search' && isJobNew(job);
+  const match = computeMatch(job);
+  const meta = [];
+  if (job.location) meta.push(`<span><span class="label">LOC</span> ${escapeHtml(job.location)}</span>`);
+  if (job.parsedPay) meta.push(`<span class="pay-tag"><span class="label" style="color:var(--text-faint);">PAY</span> ${formatPay(job.parsedPay)}</span>`);
+  if (job.employmentType && job.employmentType !== 'full-time' && job.employmentType !== 'unknown') {
+    meta.push(`<span style="color:var(--accent);"><span class="label">TYPE</span> ${escapeHtml(job.employmentType)}</span>`);
+  }
+  if (job.posted) meta.push(`<span><span class="label">POSTED</span> ${escapeHtml(job.posted)}</span>`);
+
+  if (mode === 'search' && STATE.settings.sortMode === 'proximity' && STATE.settings.homeState) {
+    const d = jobDistanceFromHome(job, STATE.settings.homeState);
+    if (d !== Infinity) {
+      const dStr = d === 0 ? 'Remote' : `${Math.round(d)} mi`;
+      meta.push(`<span><span class="label">DIST</span> ${dStr}</span>`);
+    }
+  }
+
+  const cit = job.citizenshipStatus || 'unknown';
+  const citBadge = `<span class="gc-badge gc-${cit}">${citizenshipLabel(cit)}</span>`;
+  const newBadge = isNew ? `<span class="new-badge">NEW</span>` : '';
+  const statusBadge = mode === 'tracking'
+    ? `<span class="status-badge status-${job.status}">${job.status}</span>`
+    : (tracked ? `<span class="status-badge status-${tracked.status}">${tracked.status}</span>` : '');
+  const matchBadge = match
+    ? `<span class="match-score ${matchScoreClass(match.score)}" data-toggle-match="${escapeHtml(job.id)}" style="cursor:pointer;" title="Tap for details">⊙ ${match.score}% match</span>`
+    : '';
+
+  // Follow-up due flag: shown only on tracked jobs that have been "applied" for 7+ days without follow-up checked
+  let followUpFlag = '';
+  if (mode === 'tracking' && job.status === 'applied') {
+    const cl = STATE.settings.applicationChecklists[job.id] || {};
+    if (!cl.followUp) {
+      const appliedTime = job.appliedAt || job.addedAt;
+      if (appliedTime) {
+        const daysSince = (Date.now() - new Date(appliedTime).getTime()) / (1000 * 60 * 60 * 24);
+        if (daysSince >= 7) {
+          followUpFlag = `<span class="follow-up-flag">⏰ Follow up (${Math.floor(daysSince)}d)</span>`;
+        }
+      }
+    }
+  }
+
+  let actions = '';
+  const aiAvailable = hasAiAvailable() && getActiveResumeText();
+  const aiBtn = aiAvailable
+    ? `<button class="ai-btn" data-ai-tailor="${escapeHtml(job.id)}" title="Get tailored resume suggestions for this job">✨ AI Tailor</button>`
+    : '';
+
+  if (mode === 'search') {
+    actions = `
+      ${job.url ? `<a class="btn" href="${escapeHtml(job.url)}" target="_blank" rel="noopener">View ↗</a>` : ''}
+      ${aiBtn}
+      ${tracked
+        ? `<button class="btn" disabled style="opacity:0.5">Tracked</button>`
+        : `<button class="btn primary" data-action="track" data-id="${job.id}">Track</button>`}
+    `;
+  } else {
+    actions = `
+      ${job.url ? `<a class="btn" href="${escapeHtml(job.url)}" target="_blank" rel="noopener">View ↗</a>` : ''}
+      ${aiBtn}
+      <button class="btn" data-action="edit" data-id="${job.id}">Edit</button>
+    `;
+  }
+
+  const watchStar = mode === 'search' && job.company
+    ? `<button class="watch-star ${watched ? 'active' : ''}" data-watch-company="${escapeHtml(job.company)}" title="${watched ? 'Unwatch' : 'Watch'} ${escapeHtml(job.company)}">${watched ? '★' : '☆'}</button>`
+    : '';
+
+  // Match detail (collapsed by default, shown via #matchDetail-{id})
+  const matchDetailHtml = match ? `
+    <div class="match-detail" id="matchDetail-${escapeHtml(job.id)}" style="display:none;">
+      <div class="match-detail-label">Matched (${match.matched.length})</div>
+      <div>${match.matched.slice(0, 20).map(k => `<span class="kw matched">${escapeHtml(k)}</span>`).join('')}${match.matched.length > 20 ? `<span style="color:var(--text-faint);font-size:11px;">+${match.matched.length-20} more</span>` : ''}</div>
+      <div class="match-detail-label" style="margin-top:8px;">Missing from your resume (${match.missing.length})</div>
+      <div>${match.missing.slice(0, 20).map(k => `<span class="kw missing">${escapeHtml(k)}</span>`).join('')}${match.missing.length > 20 ? `<span style="color:var(--text-faint);font-size:11px;">+${match.missing.length-20} more</span>` : ''}</div>
+    </div>
+  ` : '';
+
+  // AI suggestion placeholder (populated on demand)
+  const aiSuggestionHtml = `<div class="ai-suggestion" id="aiSuggestion-${escapeHtml(job.id)}" style="display:none;"></div>`;
+
+  // Application checklist for tracked jobs
+  const checklistHtml = mode === 'tracking' ? renderChecklist(job.id) : '';
+
+  return `
+    <article class="job-card ${cit}">
+      <div class="job-card-header">
+        <div class="job-title">${escapeHtml(job.title)}</div>
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+          ${watchStar}
+          <div class="job-source">${escapeHtml(job.source || 'Manual')}</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;">${escapeHtml(job.company || '')}</div>
+      <div class="job-meta">${meta.join('')}</div>
+      <div class="badge-row">${newBadge}${matchBadge}${citBadge}${statusBadge}${followUpFlag}</div>
+      ${matchDetailHtml}
+      ${aiSuggestionHtml}
+      ${mode === 'tracking' && job.notes ? `<div class="notes-display">${escapeHtml(job.notes)}</div>` : ''}
+      ${checklistHtml}
+      <div class="job-actions">${actions}</div>
+    </article>
+  `;
+}
+
+function renderChecklist(jobId) {
+  const cl = STATE.settings.applicationChecklists[jobId] || {};
+  const items = [
+    { key: 'resumeTailored', label: 'Resume tailored' },
+    { key: 'coverLetter',    label: 'Cover letter written' },
+    { key: 'references',     label: 'References ready' },
+    { key: 'portfolio',      label: 'Portfolio / links ready' },
+    { key: 'submitted',      label: 'Application submitted' },
+    { key: 'followUp',       label: 'Followed up' }
+  ];
+  const checked = items.filter(i => cl[i.key]).length;
+  const pct = Math.round((checked / items.length) * 100);
+  const rows = items.map(i => `
+    <label class="checklist-row ${cl[i.key] ? 'checked' : ''}">
+      <input type="checkbox" data-checklist-job="${escapeHtml(jobId)}" data-checklist-key="${i.key}" ${cl[i.key] ? 'checked' : ''} />
+      ${escapeHtml(i.label)}
+    </label>
+  `).join('');
+  return `
+    <div class="checklist">
+      <div class="checklist-title">
+        <span>Application Checklist</span>
+        <div class="checklist-progress"><div class="checklist-progress-fill" style="width:${pct}%"></div></div>
+        <span style="color:var(--accent);">${checked}/${items.length}</span>
+      </div>
+      ${rows}
+    </div>
+  `;
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ====== Track / Edit ======
+async function trackJob(job) {
+  const newJob = { ...job, status: 'saved', notes: '', addedAt: new Date().toISOString() };
+  delete newJob.fullText;
+  STATE.tracked.unshift(newJob);
+  await saveTracked();
+  // Auto-add company to watchlist if not already there
+  if (job.company && !isCompanyWatched(job.company)) {
+    const source = job.source === 'Greenhouse' || job.source === 'Lever' ? 'api' : 'manual';
+    const extra = {};
+    if (job.id) {
+      const parts = job.id.split('_');
+      if (job.source === 'Greenhouse') { extra.token = parts[1]; extra.atsType = 'greenhouse'; }
+      if (job.source === 'Lever') { extra.slug = parts[1]; extra.atsType = 'lever'; }
+    }
+    STATE.settings.watchedCompanies.push({
+      name: job.company, source, addedAt: new Date().toISOString(), ...extra
+    });
+    await saveSettings();
+    updateWatchedCount();
+  }
+  updateTrackedCount();
+  renderSearchResults();
+  toast('Tracked');
+}
+
+function openEdit(id) {
+  const j = STATE.tracked.find(x => x.id === id);
+  if (!j) return;
+  STATE.editingId = id;
+  document.getElementById('editTitle').textContent = j.title;
+  document.getElementById('e_status').value = j.status;
+  document.getElementById('e_notes').value = j.notes || '';
+  document.getElementById('editModal').classList.add('open');
+}
+
+document.getElementById('editSaveBtn').addEventListener('click', async () => {
+  const j = STATE.tracked.find(x => x.id === STATE.editingId);
+  if (!j) return;
+  const oldStatus = j.status;
+  j.status = document.getElementById('e_status').value;
+  j.notes = document.getElementById('e_notes').value;
+  // Stamp appliedAt when transitioning to applied (for follow-up reminder)
+  if (oldStatus !== 'applied' && j.status === 'applied' && !j.appliedAt) {
+    j.appliedAt = new Date().toISOString();
+  }
+  // Re-parse pay from notes if not already set
+  if (!j.parsedPay) j.parsedPay = parsePay(j.notes);
+  await saveTracked();
+  document.getElementById('editModal').classList.remove('open');
+  renderTracking();
+  toast('Saved');
+});
+document.getElementById('editCancelBtn').addEventListener('click', () => {
+  document.getElementById('editModal').classList.remove('open');
+});
+document.getElementById('editDeleteBtn').addEventListener('click', async () => {
+  if (!confirm('Remove this job from tracking?')) return;
+  STATE.tracked = STATE.tracked.filter(x => x.id !== STATE.editingId);
+  await saveTracked();
+  document.getElementById('editModal').classList.remove('open');
+  updateTrackedCount();
+  renderTracking();
+  toast('Removed');
+});
+
+function renderTracking() {
+  const el = document.getElementById('trackingList');
+  if (!STATE.tracked.length) {
+    el.innerHTML = '<div class="empty"><span class="icon">◊</span>Nothing tracked yet.<br>Search and tap Track, or use the + button.</div>';
+    return;
+  }
+
+  const order = ['interview', 'applied', 'saved', 'offer', 'rejected'];
+  const labels = {
+    saved: 'Saved', applied: 'Applied', interview: 'Interview',
+    offer: 'Offer', rejected: 'Rejected'
+  };
+  const groups = {};
+  STATE.tracked.forEach(j => { (groups[j.status] = groups[j.status] || []).push(j); });
+
+  let html = '';
+  for (const status of order) {
+    if (!groups[status]?.length) continue;
+    html += `<div class="status-section">
+      <div class="section-label"><span class="status-badge status-${status}">${labels[status]}</span> <span style="color:var(--text-faint);">(${groups[status].length})</span></div>
+      <div class="job-list">
+        ${groups[status].map(j => jobCardHtml(j, 'tracking')).join('')}
+      </div>
+    </div>`;
+  }
+  el.innerHTML = html;
+
+  el.querySelectorAll('[data-action="edit"]').forEach(b => {
+    b.addEventListener('click', () => openEdit(b.dataset.id));
+  });
+  el.querySelectorAll('[data-checklist-job]').forEach(cb => {
+    cb.addEventListener('change', async () => {
+      const jobId = cb.dataset.checklistJob;
+      const key = cb.dataset.checklistKey;
+      if (!STATE.settings.applicationChecklists[jobId]) {
+        STATE.settings.applicationChecklists[jobId] = {};
+      }
+      STATE.settings.applicationChecklists[jobId][key] = cb.checked;
+      await saveSettings();
+      // Auto-advance status: if "submitted" just got checked and status is still "saved", advance to "applied"
+      if (key === 'submitted' && cb.checked) {
+        const job = STATE.tracked.find(x => x.id === jobId);
+        if (job && job.status === 'saved') {
+          job.status = 'applied';
+          job.appliedAt = new Date().toISOString();
+          await saveTracked();
+          toast('Auto-advanced to Applied');
+        }
+      }
+      // Re-render to update line-through, progress bar, and any status changes
+      renderTracking();
+    });
+  });
+  el.querySelectorAll('[data-toggle-match]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.toggleMatch;
+      const detail = document.getElementById('matchDetail-' + id);
+      if (detail) detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+  el.querySelectorAll('[data-ai-tailor]').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.aiTailor;
+      const job = STATE.tracked.find(x => x.id === id);
+      const target = document.getElementById('aiSuggestion-' + id);
+      if (job && target) tailorResumeForJob(job, b, target);
+    });
+  });
+}
+
+function updateTrackedCount() {
+  document.getElementById('trackedCount').textContent = STATE.tracked.length;
+}
+
+// ====== Companies tab ======
+function renderCompanies() {
+  const el = document.getElementById('companiesList');
+  if (!STATE.settings.watchedCompanies.length) {
+    el.innerHTML = '<div class="empty"><span class="icon">★</span>No watched companies yet.<br>Tap the star on any job, or "+ Add Company" above.</div>';
+    return;
+  }
+  // Sort: API-tracked first, then alpha
+  const sorted = [...STATE.settings.watchedCompanies].sort((a, b) => {
+    if (a.source !== b.source) return a.source === 'api' ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
+  el.innerHTML = sorted.map(c => {
+    const isApi = c.source === 'api';
+    const indicator = isApi ? 'ind-api' : 'ind-manual';
+    const badge = isApi ? '🟢 API' : '🟡 Manual';
+    const tagBadge = c.tag ? `<span style="font-family:var(--mono);font-size:9px;letter-spacing:0.1em;padding:2px 6px;border:1px solid var(--border);color:var(--text-faint);text-transform:uppercase;margin-left:6px;">${escapeHtml(c.tag)}</span>` : '';
+    const detail = isApi
+      ? `${c.atsType || 'ATS'} · ${escapeHtml(c.token || c.slug || '')}`
+      : (c.token ? `<a href="${escapeHtml(c.token)}" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Open careers ↗</a>` : 'Manual check');
+    return `
+      <div class="company-card">
+        <div class="indicator ${indicator}"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="name">${escapeHtml(c.name)}${tagBadge}</div>
+          <div class="meta">${badge} · ${detail}</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-shrink:0;">
+          <button class="btn" data-edit-company="${escapeHtml(c.name)}">Edit</button>
+          <button class="btn danger" data-unwatch="${escapeHtml(c.name)}">Remove</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  el.querySelectorAll('[data-unwatch]').forEach(b => {
+    b.addEventListener('click', () => toggleWatchCompany(b.dataset.unwatch));
+  });
+  el.querySelectorAll('[data-edit-company]').forEach(b => {
+    b.addEventListener('click', () => openEditCompany(b.dataset.editCompany));
+  });
+}
+
+// Watch modal
+document.getElementById('addWatchedBtn').addEventListener('click', () => {
+  document.getElementById('w_type').value = 'manual';
+  document.getElementById('w_name').value = '';
+  document.getElementById('w_token').value = '';
+  updateWatchModalFields();
+  document.getElementById('watchModal').classList.add('open');
+});
+document.getElementById('w_type').addEventListener('change', updateWatchModalFields);
+function updateWatchModalFields() {
+  const type = document.getElementById('w_type').value;
+  const label = document.getElementById('w_tokenLabel');
+  const input = document.getElementById('w_token');
+  const hint = document.getElementById('w_tokenHint');
+  if (type === 'gh') {
+    label.textContent = 'Greenhouse Token';
+    input.placeholder = 'andurilindustries';
+    hint.textContent = 'The token from boards.greenhouse.io/{token}. Case-sensitive.';
+  } else if (type === 'lever') {
+    label.textContent = 'Lever Slug';
+    input.placeholder = 'shieldai';
+    hint.textContent = 'The slug from jobs.lever.co/{slug}.';
+  } else {
+    label.textContent = 'Careers URL';
+    input.placeholder = 'https://careers.northropgrumman.com';
+    hint.textContent = 'Where you manually check for jobs.';
+  }
+}
+document.getElementById('watchCancelBtn').addEventListener('click', () => {
+  document.getElementById('watchModal').classList.remove('open');
+});
+document.getElementById('watchSaveBtn').addEventListener('click', async () => {
+  const name = document.getElementById('w_name').value.trim();
+  const type = document.getElementById('w_type').value;
+  const tokenVal = document.getElementById('w_token').value.trim();
+  if (!name) return toast('Name required');
+  if (isCompanyWatched(name)) {
+    toast('Already watching');
+    document.getElementById('watchModal').classList.remove('open');
+    return;
+  }
+  const extra = {};
+  let source = 'manual';
+  if (type === 'gh') {
+    if (!tokenVal) return toast('Token required');
+    extra.token = tokenVal;
+    extra.atsType = 'greenhouse';
+    source = 'api';
+    if (!STATE.settings.ghBoards.includes(tokenVal)) {
+      STATE.settings.ghBoards.push(tokenVal);
+    }
+  } else if (type === 'lever') {
+    if (!tokenVal) return toast('Slug required');
+    extra.slug = tokenVal;
+    extra.atsType = 'lever';
+    source = 'api';
+    if (!STATE.settings.leverBoards.includes(tokenVal)) {
+      STATE.settings.leverBoards.push(tokenVal);
+    }
+  } else {
+    if (tokenVal) extra.token = tokenVal;
+  }
+  STATE.settings.watchedCompanies.push({
+    name, source, addedAt: new Date().toISOString(), ...extra
+  });
+  await saveSettings();
+  updateWatchedCount();
+  renderCompanies();
+  document.getElementById('ghBoards').value = STATE.settings.ghBoards.join('\n');
+  document.getElementById('leverBoards').value = STATE.settings.leverBoards.join('\n');
+  document.getElementById('watchModal').classList.remove('open');
+  toast(`Watching ${name}`);
+});
+
+// Edit company modal
+let _editCompanyOriginalName = null;
+function openEditCompany(name) {
+  const c = STATE.settings.watchedCompanies.find(x => x.name === name);
+  if (!c) return;
+  _editCompanyOriginalName = name;
+  document.getElementById('ec_name').value = c.name;
+  const token = c.token || c.slug || '';
+  document.getElementById('ec_token').value = token;
+  document.getElementById('ec_tag').value = c.tag || '';
+  // Adjust label/hint based on source
+  const label = document.getElementById('ec_tokenLabel');
+  const hint = document.getElementById('ec_tokenHint');
+  if (c.source === 'api' && c.atsType === 'greenhouse') {
+    label.textContent = 'Greenhouse Token';
+    hint.textContent = 'The {token} from boards.greenhouse.io/{token}.';
+  } else if (c.source === 'api' && c.atsType === 'lever') {
+    label.textContent = 'Lever Slug';
+    hint.textContent = 'The {slug} from jobs.lever.co/{slug}.';
+  } else {
+    label.textContent = 'Careers URL';
+    hint.textContent = 'Where you manually check for jobs.';
+  }
+  document.getElementById('editCompanyModal').classList.add('open');
+}
+document.getElementById('editCompanyCancelBtn').addEventListener('click', () => {
+  document.getElementById('editCompanyModal').classList.remove('open');
+});
+document.getElementById('editCompanySaveBtn').addEventListener('click', async () => {
+  const c = STATE.settings.watchedCompanies.find(x => x.name === _editCompanyOriginalName);
+  if (!c) return;
+  const newName = document.getElementById('ec_name').value.trim();
+  const newToken = document.getElementById('ec_token').value.trim();
+  const newTag = document.getElementById('ec_tag').value.trim();
+  if (!newName) return toast('Name required');
+  // If renaming, check for conflict
+  if (newName !== c.name && isCompanyWatched(newName)) {
+    return toast('Another company already has that name');
+  }
+  // For API companies, also keep ghBoards/leverBoards in sync if token changed
+  if (c.source === 'api' && c.atsType === 'greenhouse' && c.token !== newToken) {
+    const list = STATE.settings.ghBoards;
+    const idx = list.indexOf(c.token);
+    if (idx >= 0) list[idx] = newToken;
+    else if (newToken && !list.includes(newToken)) list.push(newToken);
+  } else if (c.source === 'api' && c.atsType === 'lever' && c.slug !== newToken) {
+    const list = STATE.settings.leverBoards;
+    const idx = list.indexOf(c.slug);
+    if (idx >= 0) list[idx] = newToken;
+    else if (newToken && !list.includes(newToken)) list.push(newToken);
+  }
+  c.name = newName;
+  if (c.source === 'api' && c.atsType === 'lever') c.slug = newToken;
+  else c.token = newToken;
+  c.tag = newTag || undefined;
+  await saveSettings();
+  document.getElementById('ghBoards').value = STATE.settings.ghBoards.join('\n');
+  document.getElementById('leverBoards').value = STATE.settings.leverBoards.join('\n');
+  document.getElementById('editCompanyModal').classList.remove('open');
+  renderCompanies();
+  toast('Saved');
+});
+
+// Watched-only filter
+document.getElementById('watchedFilterCheck').addEventListener('change', e => {
+  STATE.settings.watchedFilter = e.target.checked;
+  saveSettings();
+  if (STATE.searchResults.length) renderSearchResults();
+});
+
+// Show all jobs from watched
+document.getElementById('showAllWatchedBtn').addEventListener('click', async () => {
+  const apiCompanies = STATE.settings.watchedCompanies.filter(c => c.source === 'api');
+  if (!apiCompanies.length) {
+    toast('No API-tracked companies in watchlist. Add some first or track a job from search.');
+    return;
+  }
+  document.querySelector('[data-tab="discover"]').click();
+  document.getElementById('searchInput').value = '';
+  STATE.settings.watchedFilter = true;
+  document.getElementById('watchedFilterCheck').checked = true;
+  await saveSettings();
+  await runSearch();
+});
+
+// ====== Manual add ======
+document.getElementById('addManualBtn').addEventListener('click', () => {
+  ['m_title','m_company','m_location','m_url','m_notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('m_status').value = 'saved';
+  document.getElementById('m_citizenship').value = 'unknown';
+  document.querySelectorAll('#primeChips .chip').forEach(x => x.classList.remove('active'));
+  document.getElementById('manualModal').classList.add('open');
+});
+
+// Quick-pick defense primes
+document.querySelectorAll('#primeChips .chip').forEach(c => {
+  c.addEventListener('click', () => {
+    document.getElementById('m_company').value = c.dataset.prime;
+    document.getElementById('m_citizenship').value = 'citizens-only';
+    // Visual feedback
+    document.querySelectorAll('#primeChips .chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  });
+});
+document.getElementById('manualCancelBtn').addEventListener('click', () => {
+  document.getElementById('manualModal').classList.remove('open');
+});
+document.getElementById('manualSaveBtn').addEventListener('click', async () => {
+  const title = document.getElementById('m_title').value.trim();
+  if (!title) return toast('Title required');
+  const notes = document.getElementById('m_notes').value.trim();
+  const location = document.getElementById('m_location').value.trim();
+  const citManual = document.getElementById('m_citizenship').value;
+  const citAuto = detectCitizenshipStatus(title + ' ' + notes);
+  const job = {
+    id: 'man_' + Date.now(),
+    title,
+    company: document.getElementById('m_company').value.trim(),
+    location,
+    parsedStates: parseStates(location),
+    parsedPay: parsePay(title + ' ' + notes),
+    url: document.getElementById('m_url').value.trim(),
+    notes,
+    status: document.getElementById('m_status').value,
+    source: 'Manual',
+    addedAt: new Date().toISOString(),
+    citizenshipStatus: citManual !== 'unknown' ? citManual : citAuto
+  };
+  STATE.tracked.unshift(job);
+  await saveTracked();
+  updateTrackedCount();
+  document.getElementById('manualModal').classList.remove('open');
+  document.querySelector('[data-tab="tracking"]').click();
+  toast('Added');
+});
+
+// ====== Settings handlers ======
+document.getElementById('saveGhBtn').addEventListener('click', async () => {
+  STATE.settings.ghBoards = parseTokens(document.getElementById('ghBoards').value);
+  await saveSettings();
+  toast(`Saved ${STATE.settings.ghBoards.length} Greenhouse companies`);
+});
+document.getElementById('saveLeverBtn').addEventListener('click', async () => {
+  STATE.settings.leverBoards = parseTokens(document.getElementById('leverBoards').value);
+  await saveSettings();
+  toast(`Saved ${STATE.settings.leverBoards.length} Lever companies`);
+});
+document.getElementById('saveFilterBtn').addEventListener('click', async () => {
+  const raw = document.getElementById('excludeKeywords').value;
+  STATE.settings.excludeKeywords = raw.split(',').map(s => s.trim()).filter(Boolean);
+  await saveSettings();
+  toast('Filter saved');
+});
+document.getElementById('saveHomeBtn').addEventListener('click', async () => {
+  STATE.settings.homeState = document.getElementById('homeStateSelect').value;
+  await saveSettings();
+  document.getElementById('homeStateInline').textContent = STATE.settings.homeState ? `(${STATE.settings.homeState})` : '';
+  updateSortLabel();
+  toast(STATE.settings.homeState ? `Home: ${STATE.settings.homeState}` : 'Home cleared');
+});
+document.getElementById('clearDataBtn').addEventListener('click', async () => {
+  if (!confirm('Delete ALL tracked jobs? This cannot be undone.')) return;
+  STATE.tracked = [];
+  await saveTracked();
+  updateTrackedCount();
+  renderTracking();
+  toast('Cleared');
+});
+document.getElementById('resetDefaultsBtn').addEventListener('click', async () => {
+  if (!confirm('Reset Greenhouse and Lever company lists to defaults?')) return;
+  STATE.settings.ghBoards = [...DEFAULT_GH_BOARDS];
+  STATE.settings.leverBoards = [...DEFAULT_LEVER_BOARDS];
+  await saveSettings();
+  document.getElementById('ghBoards').value = STATE.settings.ghBoards.join('\n');
+  document.getElementById('leverBoards').value = STATE.settings.leverBoards.join('\n');
+  toast('Reset to defaults');
+});
+
+document.getElementById('loadDmvPackBtn').addEventListener('click', async () => {
+  const existing = new Set(STATE.settings.watchedCompanies.map(c => c.name.toLowerCase().trim()));
+  let added = 0;
+  DEFAULT_DMV_WATCHLIST.forEach(c => {
+    if (!existing.has(c.name.toLowerCase().trim())) {
+      STATE.settings.watchedCompanies.push({ ...c, addedAt: new Date().toISOString() });
+      added++;
+    }
+  });
+  await saveSettings();
+  updateWatchedCount();
+  renderCompanies();
+  toast(added ? `Added ${added} DMV companies` : 'All already in watchlist');
+});
+
+document.getElementById('testConnBtn').addEventListener('click', async () => {
+  const out = document.getElementById('testConnResult');
+  const storageInfo = `<div style="margin-bottom:8px;color:var(--text-dim);">Storage backend: <span style="color:var(--accent);">${Storage.describe()}</span></div>`;
+  out.innerHTML = storageInfo + '<span style="color:var(--text-dim);">Testing network…</span>';
+  let networkLine = '';
+  try {
+    const res = await fetch('https://boards-api.greenhouse.io/v1/boards/andurilindustries/jobs?content=false');
+    if (res.ok) {
+      const d = await res.json();
+      const count = (d.jobs || []).length;
+      networkLine = `<span style="color:var(--gc-green);">✓ Network works.</span> Anduril returned ${count} jobs.`;
+    } else {
+      networkLine = `<span style="color:var(--gc-yellow);">⚠ Server reachable, returned ${res.status}.</span>`;
+    }
+  } catch (e) {
+    networkLine = `<span style="color:var(--gc-red);">✗ Network blocked.</span> Open the file in Chrome/Safari, or host it.<br><br><span style="color:var(--text-dim);">${escapeHtml(e.message || 'fetch failed')}</span>`;
+  }
+  let storageWarn = '';
+  if (Storage.backend === 'memory') {
+    storageWarn = `<div style="margin-top:10px;color:var(--gc-yellow);">⚠ Settings won't persist across refreshes here.</div>`;
+  }
+  out.innerHTML = storageInfo + networkLine + storageWarn;
+});
+
+function parseTokens(text) {
+  return text.split(/[\n,]/).map(s => s.trim()).filter(Boolean);
+}
+
+// ====== Export ======
+document.getElementById('exportJsonBtn').addEventListener('click', () => {
+  // Strip parsedPay/parsedStates/etc to keep export readable; key is in tracked itself
+  // We export only the tracked array (not full settings) so API key stays private
+  downloadFile('reliability_jobs.json', JSON.stringify(STATE.tracked, null, 2), 'application/json');
+});
+document.getElementById('exportCsvBtn').addEventListener('click', () => {
+  const headers = ['title','company','location','status','citizenshipStatus','payMin','payMax','url','notes','source','addedAt'];
+  const rows = STATE.tracked.map(j => {
+    const row = {
+      ...j,
+      payMin: j.parsedPay?.min || '',
+      payMax: j.parsedPay?.max || ''
+    };
+    return headers.map(h => `"${String(row[h]||'').replace(/"/g,'""')}"`).join(',');
+  });
+  downloadFile('reliability_jobs.csv', headers.join(',') + '\n' + rows.join('\n'), 'text/csv');
+});
+function downloadFile(name, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ====== Init ======
+(async function init() {
+  await loadState();
+
+  // Hydrate settings UI
+  document.getElementById('ghBoards').value = (STATE.settings.ghBoards || []).join('\n');
+  document.getElementById('leverBoards').value = (STATE.settings.leverBoards || []).join('\n');
+  document.getElementById('excludeKeywords').value = (STATE.settings.excludeKeywords || []).join(', ');
+
+  // Citizenship mode buttons
+  document.querySelectorAll('.seg-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === STATE.settings.citizenshipMode);
+  });
+
+  // Build state grid
+  buildStateGrid();
+  refreshStateUI();
+
+  // Pay UI
+  refreshPayUI();
+  // Type UI
+  refreshTypeUI();
+
+  // Sort UI
+  document.querySelector(`input[name="sortMode"][value="${STATE.settings.sortMode}"]`).checked = true;
+  updateSortLabel();
+
+  // Home state dropdown
+  const homeSelect = document.getElementById('homeStateSelect');
+  Object.keys(US_STATES).sort().forEach(abbr => {
+    const opt = document.createElement('option');
+    opt.value = abbr;
+    opt.textContent = `${abbr} — ${US_STATES[abbr].name}`;
+    homeSelect.appendChild(opt);
+  });
+  homeSelect.value = STATE.settings.homeState || '';
+  document.getElementById('homeStateInline').textContent = STATE.settings.homeState ? `(${STATE.settings.homeState})` : '';
+
+  // Watched filter
+  document.getElementById('watchedFilterCheck').checked = !!STATE.settings.watchedFilter;
+  updateWatchedCount();
+
+  updateTrackedCount();
+  await runEnvironmentCheck();
+})();
+
+async function runEnvironmentCheck() {
+  const banner = document.getElementById('envBanner');
+  if (!banner) return;
+  if (Storage.backend === 'memory') {
+    banner.innerHTML = `<div style="background:rgba(212,168,90,0.1);border:1px solid #6b5a3a;padding:10px 12px;margin-bottom:14px;color:var(--gc-yellow);font-size:12px;line-height:1.5;">
+      <strong>Storage warning:</strong> Settings and tracked jobs won't persist after refresh. Host the file or open in a real browser.
+    </div>`;
+    return;
+  }
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 4000);
+    const res = await fetch('https://boards-api.greenhouse.io/v1/boards/andurilindustries/jobs?content=false', { signal: ctrl.signal });
+    clearTimeout(t);
+    if (!res.ok) {
+      banner.innerHTML = `<div style="background:rgba(212,168,90,0.1);border:1px solid #6b5a3a;padding:8px 10px;margin-bottom:10px;color:var(--gc-yellow);font-size:11px;">Greenhouse responded with ${res.status} on test token.</div>`;
+    } else {
+      banner.innerHTML = '';
+    }
+  } catch (e) {
+    banner.innerHTML = `<div style="background:rgba(194,85,85,0.1);border:1px solid var(--gc-red);padding:10px 12px;margin-bottom:14px;color:var(--gc-red);font-size:12px;line-height:1.5;">
+      <strong>Network blocked.</strong> Search will not work here. Save the file and open it in Chrome/Safari, or host it (Netlify Drop / GitHub Pages).
+    </div>`;
+  }
+}
+</script>
+</body>
+</html>
